@@ -8,8 +8,9 @@ Minigrow APIs are based on three kind of objects: sensors, actuators and command
    /api/minigrowl/v1/commands
    /api/minigrowl/v1/sensors
    /api/minigrowl/v1/actuators
+   /api/minigrowl/v1/commands/queue/add
 ```
-/api/minigrowl/v1/commands/queue/add
+
 
 
 ## Command example:
@@ -190,4 +191,13 @@ Minigrow APIs are based on three kind of objects: sensors, actuators and command
         ]
     }
 ]
+```
+## Send Command example
+PUT on /api/minigrowl/v1/commands/queue/add, with payload like the following (it must be a supported command seen above)
+```
+{
+        "name": "Turn intake Fan OFF",
+        "targetActuator": 2,
+        "val": "0"
+}
 ```
