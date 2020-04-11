@@ -1,6 +1,8 @@
 # Minigrowl-react
 front-end for growl app
 
+Minigrow APIs are based on three kind of objects: sensors, actuators and commands. While the first tho reflec real hardware devices with their own reading, the command is an abstraction used to drive such devices.
+
 # APIs
 ```
    /api/minigrowl/v1/commands
