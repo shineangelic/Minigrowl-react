@@ -14,11 +14,53 @@ Minigrow APIs are based on three kind of objects: sensors, actuators and command
 
 ## Command example:
 ```
-{
+[
+    {
+        "name": "Turn ON intake Fan",
+        "val": "1",
+        "tgt": 2
+    },
+    {
         "name": "Turn intake Fan OFF",
-        "targetActuator": 2,
-        "val": "0"
-}
+        "val": "0",
+        "tgt": 2
+    },
+    {
+        "name": "Set Temperature",
+        "val": "2",
+        "tgt": 25
+    },
+    {
+        "name": "Turn ON Hvac",
+        "val": "1",
+        "tgt": 25
+    },
+    {
+        "name": "Turn OFF Hvac",
+        "val": "0",
+        "tgt": 25
+    },
+    {
+        "name": "Switch lights ON",
+        "val": "1",
+        "tgt": 12
+    },
+    {
+        "name": "Switch lights OFF",
+        "val": "0",
+        "tgt": 12
+    },
+    {
+        "name": "Turn ON outtake Fan",
+        "val": "1",
+        "tgt": 13
+    },
+    {
+        "name": "Turn OFF outtake Fan",
+        "val": "0",
+        "tgt": 13
+    }
+]
 ```
 
 ## Sensors example:
