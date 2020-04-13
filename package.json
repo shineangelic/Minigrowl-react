@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^4.9.10",
     "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.49",
     "@n1ru4l/react-time-ago": "^1.1.0",
     "@stomp/stompjs": "^5.4.4",
     "@testing-library/jest-dom": "^4.2.4",

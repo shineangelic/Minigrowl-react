@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Title from './Title';
-
+import List from '@material-ui/core/List';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -17,9 +17,9 @@ import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { red } from '@material-ui/core/colors';
-import { ToggleOff, ToggleOn, Share, ContactMailRounded } from '@material-ui/icons';
-
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { ToggleOff, ToggleOn, Share, ContactMailRounded, FlashAuto, TouchApp } from '@material-ui/icons';
+import { Alert } from '@material-ui/lab';
+import { Box } from '@material-ui/core';
 
 function preventDefault(event) {
   event.preventDefault();
@@ -57,6 +57,16 @@ export default function MinigrowlActuator(props) {
   const att = props.value;
   const dateT = Date(att.timeStamp);
   const [expanded, setExpanded] = React.useState(false);
+  const MODE_MANUAL = -1;
+  const MODE_AUTO = -2;
+  function isEnabledComando(comando) {
+    if (comando.val == MODE_MANUAL || comando.val == MODE_AUTO) {
+      return att.mode == comando.val; //mode command
+    } else {
+      //real command
+      return att.val == comando.val || att.mode == MODE_AUTO;
+    }
+  }
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -76,13 +86,16 @@ export default function MinigrowlActuator(props) {
               {att.typ} (on PIN {att.id})
             </Title>
           }
-          subheader={<TimeAgo date={new Date(att.timeStamp)} render={({ error, value }) => <span>{value}</span>} />}
+          subheader={
+            <TimeAgo date={new Date(att.timeStamp)} render={({ error, value }) => <span>Last seen: {value}</span>} />
+          }
         />
-        <CardMedia className={classes.media} image="/static/reflectors.jpg" title="Lights" />
+        <CardMedia className={classes.media} image="/static/grow.jpg" title="Lights" />
         <CardContent>
           <Typography variant="h4" component="p">
             {att.val}
           </Typography>
+          {att.err && <Alert severity="error">Dispositivo in errore!</Alert>}
         </CardContent>
         <CardActions disableSpacing>
           COMMANDS
@@ -99,23 +112,33 @@ export default function MinigrowlActuator(props) {
         </CardActions>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
-            <Typography paragraph>Method:</Typography>
-            <Typography paragraph>La luce in modalita` AUTO segue la programmazione definita sulla scheda</Typography>
+            <Typography paragraph>Method: {att.mode == MODE_AUTO ? 'Auto' : 'Manual'}</Typography>
+            <Typography paragraph>
+              La modalita` AUTO segue la programmazione definita sulla scheda e disabilita i comandi manuali
+            </Typography>
             <Typography color="textSecondary" className={classes.depositContext}></Typography>
             Last seen <TimeAgo date={new Date(att.timeStamp)} render={({ error, value }) => <span>{value}</span>} />
             {att.cmds.map((comando) => (
-              <Button
-                key={comando.name}
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={() => {
-                  props.onClick(comando);
-                }}
-              >
-                {comando.val == 1 ? <ToggleOn /> : <ToggleOff />}
-                {comando.name}
-              </Button>
+              <Box display="flex" alignItems="center" justifyContent="center">
+                <CardActions disableSpacing>
+                  <Button
+                    disabled={isEnabledComando(comando)}
+                    key={comando.name}
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    onClick={() => {
+                      props.onClick(comando);
+                    }}
+                  >
+                    {comando.val == MODE_MANUAL ? <TouchApp /> : ''}
+                    {comando.val == MODE_AUTO ? <FlashAuto /> : ''}
+                    {comando.val == 1 ? <ToggleOn /> : ''}
+                    {comando.val == 0 ? <ToggleOff /> : ''}
+                    {comando.name}
+                  </Button>
+                </CardActions>
+              </Box>
             ))}
             <div>
               <Link color="primary" href="#" onClick={preventDefault}>

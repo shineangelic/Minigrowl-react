@@ -4,7 +4,15 @@ import logo from './logo.svg';
 import MinigrowlDashboard from './MinigrowlDashboard';
 import { Client } from '@stomp/stompjs';
 import './Minigrowl.css';
+import { ThemeProvider } from '@material-ui/styles';
 
+import { AppBar, CssBaseline, Typography, createMuiTheme } from '@material-ui/core';
+import { Eco } from '@material-ui/icons';
+const theme = createMuiTheme({
+  palette: {
+    type: 'dark',
+  },
+});
 class Minigrowl extends React.Component {
   constructor(props) {
     super(props);
@@ -14,6 +22,7 @@ class Minigrowl extends React.Component {
       xIsNext: true,
     };
   }
+
   webSock() {
     console.log('Component did mount');
     // The compat mode syntax is totally different, converting to v5 syntax
@@ -30,6 +39,13 @@ class Minigrowl extends React.Component {
           console.log('SENSORI ASYNC RECV' + sens);
           const sensors = JSON.parse(sens);
           this.setState({ sensors });
+          //OK, ORA ?
+        });
+        this.client.subscribe('/topic/actuators', (message) => {
+          const sens = message.body;
+          console.log('ACT ASYNC RECV' + sens);
+          const actuators = JSON.parse(sens);
+          this.setState({ actuators });
           //OK, ORA ?
         });
       },
@@ -68,7 +84,9 @@ class Minigrowl extends React.Component {
         console.log(error);
       });
   }
-  componentWillMount() {}
+  componentWillMount() {
+    this.webSock();
+  }
   componentDidMount() {
     this.askSensors();
     this.askActuators();
@@ -90,14 +108,25 @@ class Minigrowl extends React.Component {
       });
   }
   render() {
+    const darkTheme = createMuiTheme({
+      palette: {
+        type: 'dark',
+      },
+    });
     return (
-      <div className="App">
-        <header className="App-header">
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <AppBar color="inherit">
+          <Eco />
+          <Typography variant="h4">Minigrowl</Typography>
+        </AppBar>
+
+        <div className="App">
           <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
           <img src={logo} className="App-logo" alt="logo" />
-          <p>
+          <Typography variant="h6">
             Gestione <code>Minigrowl</code>
-          </p>
+          </Typography>
           <a
             className="App-link"
             href="https://github.com/shineangelic/Minigrowl-spring"
@@ -106,9 +135,10 @@ class Minigrowl extends React.Component {
           >
             Minigrowl: Opensource growroom controller
           </a>
-        </header>
-        <MinigrowlDashboard value={this.state} onCommand={(com) => this.sendCommand(com)} />
-      </div>
+
+          <MinigrowlDashboard value={this.state} onCommand={(com) => this.sendCommand(com)} />
+        </div>
+      </ThemeProvider>
     );
   }
 }
