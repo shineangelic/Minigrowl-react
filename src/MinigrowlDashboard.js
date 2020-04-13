@@ -87,10 +87,11 @@ export default function MinigrowlDashboard(props) {
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   function handleClick(comman) {
-    props.onClick(comman);
+    props.onCommand(comman);
   }
   return (
     <Container maxWidth="lg" className={classes.container}>
+      <div></div>
       <Title>Dispositivi</Title>
       <Grid container spacing={3}>
         {/* Recent Deposits */}
