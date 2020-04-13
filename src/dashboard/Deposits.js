@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from '@material-ui/core/Link';
-import Moment from 'react-moment';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Title from './Title';
@@ -15,22 +14,16 @@ const useStyles = makeStyles({
   },
 });
 
-export default function GrowlSensor(props) {
+export default function Deposits() {
   const classes = useStyles();
-
-  const sensore = props;
-  const date = Date(sensore.value.timeStamp);
-
-  //const formattedDate = Moment(date).format('LL');
   return (
     <React.Fragment>
-      <Title>{sensore.value.typ}</Title>
-      <Typography variant="h4">
-        {sensore.value.val}
-        {sensore.value.uinit}
+      <Title>Recent Deposits</Title>
+      <Typography component="p" variant="h4">
+        $3,024.00
       </Typography>
       <Typography color="textSecondary" className={classes.depositContext}>
-        on {date}
+        on 15 March, 2019
       </Typography>
       <div>
         <Link color="primary" href="#" onClick={preventDefault}>
