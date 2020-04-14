@@ -65,7 +65,6 @@ class Minigrowl extends React.Component {
       .get('http://192.168.0.54:8080/api/minigrowl/v1/sensors')
       .then((response) => {
         const sensors = response.data;
-        console.log('AAB' + sensors);
         this.setState({ sensors });
       })
       .catch(function (error) {
@@ -78,7 +77,6 @@ class Minigrowl extends React.Component {
       .get('http://192.168.0.54:8080/api/minigrowl/v1/actuators')
       .then((response) => {
         const actuators = response.data;
-        console.log(actuators);
         this.setState({ actuators });
       })
       .catch(function (error) {
