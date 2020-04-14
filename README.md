@@ -1,12 +1,14 @@
 # Minigrowl-react
 
 This is the web client for minigrowl, a project to drive a growroom. Please see microcontroller's README for general concepts.
+![screenshot](/docs/scrrenDesktop1.png) 
 
-Thanks to @hatemalimam for bootstrapping it
+Thanks to [@hatemalimam](https://github.com/hatemalimam) for bootstrapping it, I am a react novice, so please take this project as it comes. Enabling web-sockets was really satisfactory, please point out any possible improvement creating an issue.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-![screenshot]()
+
+![screenshot](/docs/scrrenDesktop2.png) 
 ## Available Scripts
 
 In the project directory, you can run:
