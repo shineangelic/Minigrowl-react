@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import logo from './logo.svg';
+import Link from '@material-ui/core/Link';
 import MinigrowlDashboard from './MinigrowlDashboard';
 import { Client } from '@stomp/stompjs';
 import './Minigrowl.css';
@@ -127,14 +128,14 @@ class Minigrowl extends React.Component {
           <Typography variant="h6">
             Gestione <code>Minigrowl</code>
           </Typography>
-          <a
+          <Link
             className="App-link"
-            href="https://github.com/shineangelic/Minigrowl-spring"
+            href="https://shineangelic.github.io/Minigrowl-spring/"
             target="_blank"
             rel="noopener noreferrer"
           >
             Minigrowl: Opensource growroom controller
-          </a>
+          </Link>
 
           <MinigrowlDashboard value={this.state} onCommand={(com) => this.sendCommand(com)} />
         </div>

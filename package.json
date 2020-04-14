@@ -18,6 +18,7 @@
     "react-moment": "^0.9.7",
     "react-scripts": "3.4.1",
     "react-stomp": "^5.0.0",
+    "react-timeago": "^4.4.0",
     "typeface-roboto": "^0.0.75",
     "websocket": "^1.0.31"
   },

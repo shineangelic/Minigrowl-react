@@ -7,7 +7,6 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
-import Title from './Title';
 import MinigrowlActuator from './MinigrowlActuator';
 import SensorsTab from './SensorsTab';
 
@@ -16,15 +15,14 @@ import './Minigrowl.css';
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
       <Link color="inherit" href="https://github.com/shineangelic/Minigrowl-ESP-LoRa32-OLED">
         Made with{' '}
         <span role="img" aria-label="Love">
           ❤️
         </span>{' '}
-        in Bologna
+        in Bologna by
       </Link>{' '}
-      {new Date().getFullYear()}
+      Shine - {new Date().getFullYear()}
       {'.'}
     </Typography>
   );
@@ -92,12 +90,12 @@ export default function MinigrowlDashboard(props) {
   return (
     <Container maxWidth="lg" className={classes.container}>
       <div></div>
-      <Title>Dispositivi</Title>
+      <Typography variant="h3">Dispositivi</Typography>
       <Grid container spacing={3}>
         {/* Recent Deposits */}
 
         {actuators.map((senso) => (
-          <Grid key={senso.id} item xs={12} md={4} lg={2} sm={6}>
+          <Grid key={senso.id} item xs={12} md={4} lg={3} sm={6}>
             <Paper>
               <MinigrowlActuator value={senso} onClick={(sens) => handleClick(sens)} />
             </Paper>
@@ -105,6 +103,7 @@ export default function MinigrowlDashboard(props) {
         ))}
         <div className={classes.appBarSpacer} />
         <Grid item xs={12}>
+          <Typography variant="h3">Sensori</Typography>
           <Paper className={classes.paper}>{<SensorsTab value={sensors} />}</Paper>
         </Grid>
       </Grid>

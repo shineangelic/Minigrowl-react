@@ -1,11 +1,8 @@
 import React from 'react';
 import clsx from 'clsx';
-import Link from '@material-ui/core/Link';
-import { TimeAgo } from '@n1ru4l/react-time-ago';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import Title from './Title';
 import List from '@material-ui/core/List';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -16,14 +13,20 @@ import Collapse from '@material-ui/core/Collapse';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { red } from '@material-ui/core/colors';
-import { ToggleOff, ToggleOn, Share, ContactMailRounded, FlashAuto, TouchApp } from '@material-ui/icons';
+import { ToggleOff, ToggleOn, Share, Toys, FlashAuto, TouchApp, WbIncandescent, Opacity } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
 import { Box } from '@material-ui/core';
+import TimeAgo from 'react-timeago';
+import frenchStrings from 'react-timeago/lib/language-strings/it';
+import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 
+const formatter = buildFormatter(frenchStrings);
 function preventDefault(event) {
   event.preventDefault();
 }
+
+const MODE_MANUAL = -1;
+const MODE_AUTO = -2;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,9 +46,6 @@ const useStyles = makeStyles((theme) => ({
   expandOpen: {
     transform: 'rotate(180deg)',
   },
-  avatar: {
-    backgroundColor: red[500],
-  },
   depositContext: {
     flex: 1,
   },
@@ -57,9 +57,8 @@ export default function MinigrowlActuator(props) {
   const att = props.value;
   const dateT = Date(att.timeStamp);
   const [expanded, setExpanded] = React.useState(false);
-  const MODE_MANUAL = -1;
-  const MODE_AUTO = -2;
-  function isEnabledComando(comando) {
+
+  function isComandEnabled(comando) {
     if (comando.val == MODE_MANUAL || comando.val == MODE_AUTO) {
       return att.mode == comando.val; //mode command
     } else {
@@ -68,37 +67,48 @@ export default function MinigrowlActuator(props) {
     }
   }
 
+  function getDeviceIcon(device) {
+    if (device.typ == 'FAN') return <Toys color={att.val == 1 ? 'primary' : 'secondary'}></Toys>;
+    if (device.typ == 'LIGHT') return <WbIncandescent color={att.val == 1 ? 'primary' : 'secondary'}></WbIncandescent>;
+    //default
+    return <Share color={att.val == 1 ? 'primary' : 'secondary'}></Share>;
+  }
+
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
+  const imageStr = '/static/' + att.typ + '.jpg';
+  const titStr = att.typ + ' (on PIN ' + att.id + ')';
   return (
     <React.Fragment>
       <Card className={classes.root}>
         <CardHeader
           avatar={
-            <Avatar aria-label="recipe" className={classes.avatar}>
-              R
+            <Avatar img={imageStr} alt={titStr} className={classes.avatar}>
+              {getDeviceIcon(att)}
             </Avatar>
           }
-          title={
-            <Title>
-              {att.typ} (on PIN {att.id})
-            </Title>
-          }
+          title={titStr}
           subheader={
-            <TimeAgo date={new Date(att.timeStamp)} render={({ error, value }) => <span>Last seen: {value}</span>} />
+            <TimeAgo
+              formatter={formatter}
+              date={new Date(att.timeStamp)}
+              render={({ error, value }) => <span>{value}</span>}
+            />
           }
         />
-        <CardMedia className={classes.media} image="/static/grow.jpg" title="Lights" />
+
+        <CardMedia className={classes.media} image={imageStr} title="Lights" />
+        {att.type}
         <CardContent>
           <Typography variant="h4" component="p">
-            {att.val}
+            {att.val == 1 ? 'Acceso' : 'Spento'}
           </Typography>
           {att.err && <Alert severity="error">Dispositivo in errore!</Alert>}
         </CardContent>
         <CardActions disableSpacing>
-          COMMANDS
+          COMANDI
           <IconButton
             className={clsx(classes.expand, {
               [classes.expandOpen]: expanded,
@@ -112,17 +122,17 @@ export default function MinigrowlActuator(props) {
         </CardActions>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
-            <Typography paragraph>Method: {att.mode == MODE_AUTO ? 'Auto' : 'Manual'}</Typography>
+            <Typography paragraph>Modalità: {att.mode == MODE_AUTO ? 'Auto' : 'Manual'}</Typography>
             <Typography paragraph>
               La modalita` AUTO segue la programmazione definita sulla scheda e disabilita i comandi manuali
             </Typography>
             <Typography color="textSecondary" className={classes.depositContext}></Typography>
-            Last seen <TimeAgo date={new Date(att.timeStamp)} render={({ error, value }) => <span>{value}</span>} />
             {att.cmds.map((comando) => (
               <Box display="flex" alignItems="center" justifyContent="center">
-                <CardActions disableSpacing>
+                <CardActions>
                   <Button
-                    disabled={isEnabledComando(comando)}
+                    fullWidth
+                    disabled={isComandEnabled(comando)}
                     key={comando.name}
                     variant="contained"
                     color="primary"
@@ -140,11 +150,15 @@ export default function MinigrowlActuator(props) {
                 </CardActions>
               </Box>
             ))}
-            <div>
-              <Link color="primary" href="#" onClick={preventDefault}>
-                View balance
-              </Link>
-            </div>
+
+            <Typography paragraph>
+              Ultimo contatto{' '}
+              <TimeAgo
+                formatter={formatter}
+                date={new Date(att.timeStamp)}
+                render={({ error, value }) => <span>{value}</span>}
+              />
+            </Typography>
           </CardContent>
         </Collapse>
       </Card>

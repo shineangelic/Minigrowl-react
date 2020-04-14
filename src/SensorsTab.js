@@ -6,9 +6,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import { TimeAgo } from '@n1ru4l/react-time-ago';
 import { ErrorOutline } from '@material-ui/icons';
-import Title from './Title';
 
 function preventDefault(event) {
   event.preventDefault();
@@ -26,7 +24,6 @@ export default function SensorsTab(props) {
 
   return (
     <React.Fragment>
-      <Title>Recent Readings</Title>
       <Table size="medium">
         <TableHead>
           <TableRow>
