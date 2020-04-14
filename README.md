@@ -2,10 +2,11 @@
 
 This is the web client for minigrowl, a project to drive a growroom. Please see microcontroller's README for general concepts.
 
-Thanks to @halimam for bootstrapping it
+Thanks to @hatemalimam for bootstrapping it
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+![screenshot]()
 ## Available Scripts
 
 In the project directory, you can run:
