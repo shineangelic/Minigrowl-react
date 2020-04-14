@@ -2,7 +2,7 @@
 
 This is the web client for minigrowl, a project to drive a generic **growroom**. 
 
-Minigrow APIs are based on three kind of objects: sensors, actuators and commands. While the first tho reflec real hardware devices with their own reading, the command is an abstraction used to drive such devices. Please see [Migrogrowl-spring README](https://github.com/shineangelic/Minigrowl-spring) for general concepts.
+Minigrow APIs are based on three kind of objects: sensors, actuators and commands. While the first tho reflec real hardware devices with their own reading, the command is an abstraction used to drive such devices. Please see [Microgrowl-spring README](https://shineangelic.github.io/Minigrowl-spring/) for general concepts.
 
 ![screenshot](/docs/scrrenDesktop1.png) 
 
