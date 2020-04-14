@@ -1,14 +1,17 @@
 # Minigrowl-react
 
-This is the web client for minigrowl, a project to drive a growroom. Please see microcontroller's README for general concepts.
+This is the web client for minigrowl, a project to drive a generic **growroom**. 
+
+Minigrow APIs are based on three kind of objects: sensors, actuators and commands. While the first tho reflec real hardware devices with their own reading, the command is an abstraction used to drive such devices. Please see [Migrogrowl-spring README](https://github.com/shineangelic/Minigrowl-spring) for general concepts.
+
 ![screenshot](/docs/scrrenDesktop1.png) 
 
 Thanks to [@hatemalimam](https://github.com/hatemalimam) for bootstrapping it, I am a react novice, so please take this project as it comes. Enabling web-sockets was really satisfactory, please point out any possible improvement creating an issue.
 
+![screenshot](/docs/scrrenDesktop2.png) 
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-
-![screenshot](/docs/scrrenDesktop2.png) 
 ## Available Scripts
 
 In the project directory, you can run:
@@ -76,8 +79,3 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
 
-# Minigrowl-react
-
-front-end for growl app
-
-Minigrow APIs are based on three kind of objects: sensors, actuators and commands. While the first tho reflec real hardware devices with their own reading, the command is an abstraction used to drive such devices.
