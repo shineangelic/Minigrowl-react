@@ -13,13 +13,29 @@ import Collapse from '@material-ui/core/Collapse';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { ToggleOff, ToggleOn, Share, Toys, FlashAuto, TouchApp, WbIncandescent, Opacity } from '@material-ui/icons';
+import {
+  ToggleOff,
+  ToggleOn,
+  Share,
+  Toys,
+  FlashAuto,
+  TouchApp,
+  WbIncandescent,
+  LocalDrink,
+  Launch,
+  Whatshot,
+} from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
 import { Box } from '@material-ui/core';
 import TimeAgo from 'react-timeago';
+import lime from '@material-ui/core/colors/lime';
 import frenchStrings from 'react-timeago/lib/language-strings/it';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
+/* MyFirst react Class. Don't blast me
+04/2020 coronavirus past-time
 
+@author shine@angelic.it
+*/
 const formatter = buildFormatter(frenchStrings);
 function preventDefault(event) {
   event.preventDefault();
@@ -68,8 +84,12 @@ export default function MinigrowlActuator(props) {
   }
 
   function getDeviceIcon(device) {
-    if (device.typ == 'FAN') return <Toys color={att.val == 1 ? 'primary' : 'secondary'}></Toys>;
-    if (device.typ == 'LIGHT') return <WbIncandescent color={att.val == 1 ? 'primary' : 'secondary'}></WbIncandescent>;
+    const limee = lime[500]; // #F44336
+    if (device.typ == 'FAN') return <Toys style={{ color: att.val == 1 ? lime[50] : '' }}></Toys>;
+    if (device.typ == 'OUTTAKE') return <Launch style={{ color: att.val == 1 ? lime[50] : '' }}></Launch>;
+    if (device.typ == 'LIGHT') return <WbIncandescent style={{ color: att.val == 1 ? lime[50] : '' }}></WbIncandescent>;
+    if (device.typ == 'HVAC') return <Whatshot style={{ color: att.val == 1 ? lime[50] : '' }}></Whatshot>;
+    if (device.typ == 'HUMIDIFIER') return <LocalDrink style={{ color: att.val == 1 ? lime[50] : '' }}></LocalDrink>;
     //default
     return <Share color={att.val == 1 ? 'primary' : 'secondary'}></Share>;
   }
@@ -99,7 +119,7 @@ export default function MinigrowlActuator(props) {
           }
         />
 
-        <CardMedia className={classes.media} image={imageStr} title="Lights" />
+        <CardMedia className={classes.media} image={imageStr} title="Device" />
         {att.type}
         <CardContent>
           <Typography variant="h4" component="p">
