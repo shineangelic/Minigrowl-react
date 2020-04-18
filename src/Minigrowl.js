@@ -15,7 +15,8 @@ const theme = createMuiTheme({
   },
 });
 
-const apiHost = 'localhost'; // 192.168.0.54
+const apiHost = '192.168.0.54'; // 192.168.0.54
+const apiPort = '8000'; // 192.168.0.54
 class Minigrowl extends React.Component {
   constructor(props) {
     super(props);
@@ -33,7 +34,7 @@ class Minigrowl extends React.Component {
     this.client = new Client();
 
     this.client.configure({
-      brokerURL: `ws://${apiHost}:8080/minigrowl-ws/websocket`,
+      brokerURL: `ws://${apiHost}:${apiPort}/minigrowl-ws/websocket`,
       onConnect: () => {
         console.log('onConnect');
 
@@ -64,7 +65,7 @@ class Minigrowl extends React.Component {
   askSensors() {
     //sensors = [];
     axios
-      .get(`http://${apiHost}:8080/api/minigrowl/v1/sensors`)
+      .get(`http://${apiHost}:${apiPort}/api/minigrowl/v1/sensors`)
       .then((response) => {
         const sensors = response.data;
         this.setState({ sensors });
@@ -76,7 +77,7 @@ class Minigrowl extends React.Component {
   askActuators() {
     //sensors = [];
     axios
-      .get(`http://${apiHost}:8080/api/minigrowl/v1/actuators`)
+      .get(`http://${apiHost}:${apiPort}/api/minigrowl/v1/actuators`)
       .then((response) => {
         const actuators = response.data;
         this.setState({ actuators });
@@ -97,7 +98,7 @@ class Minigrowl extends React.Component {
     console.log('Sending command:');
     console.log(command);
     axios
-      .put(`http://${apiHost}:8080/api/minigrowl/v1/commands/queue/add`, command, {
+      .put(`http://${apiHost}:${apiPort}/api/minigrowl/v1/commands/queue/add`, command, {
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
       })
 
