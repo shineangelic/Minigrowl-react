@@ -4,12 +4,10 @@ import logo from './logo.svg';
 import Link from '@material-ui/core/Link';
 import MinigrowlDashboard from './MinigrowlDashboard';
 import { Client } from '@stomp/stompjs';
-import './Minigrowl.css';
-import update from 'react-addons-update'; // ES6
 import { ThemeProvider } from '@material-ui/styles';
-
-import { AppBar, CssBaseline, Typography, createMuiTheme } from '@material-ui/core';
-import { Eco } from '@material-ui/icons';
+import { CssBaseline, Typography, createMuiTheme } from '@material-ui/core';
+import MinigrowlAppBar from './MinigrowlAppBar';
+import './Minigrowl.css';
 
 const theme = createMuiTheme({
   palette: {
@@ -23,15 +21,16 @@ class Minigrowl extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isOnline: false,
       sensors: [],
       actuators: [],
       chartData: [],
-      chartSensor: {},
-      xIsNext: true,
+      chartSensor: {}, //selected chart
     };
   }
-  onUpdateItem = (updatedSensor) => {
+  onUpdateSensor = (updatedSensor) => {
     console.log('UPDATE ' + updatedSensor.id);
+
     const list = this.state.sensors.map((sensor, j) => {
       if (sensor.id === updatedSensor.id) {
         //e` lui!
@@ -46,7 +45,6 @@ class Minigrowl extends React.Component {
     console.log('UPDATE ' + updatedActuator.id);
     const list = this.state.actuators.map((act, j) => {
       if (act.id === updatedActuator.id) {
-        //e` lui!
         return updatedActuator;
       } else {
         return act;
@@ -56,8 +54,6 @@ class Minigrowl extends React.Component {
   };
   webSock() {
     console.log('Component did mount');
-    // The compat mode syntax is totally different, converting to v5 syntax
-    // Client is imported from '@stomp/stompjs'
     this.client = new Client();
 
     this.client.configure({
@@ -68,32 +64,31 @@ class Minigrowl extends React.Component {
         this.client.subscribe('/topic/sensors', (message) => {
           const sens = message.body;
           console.log('SENSORI ASYNC RECV' + sens);
-          const newSensor = JSON.parse(sens);
-          const slist = this.onUpdateItem(newSensor);
+          const slist = this.onUpdateSensor(JSON.parse(sens));
           ///ieeee aggiorno solo quello ciusto
           this.setState({
+            isOnline: true,
             sensors: slist,
           });
         });
         this.client.subscribe('/topic/actuators', (message) => {
           const sens = message.body;
           console.log('ACT ASYNC RECV' + sens);
-          const actuator = JSON.parse(sens);
-          const alist = this.onUpdateActuator(actuator);
+          const alist = this.onUpdateActuator(JSON.parse(sens));
           ///ieeee aggiorno solo quello ciusto
           this.setState({
+            isOnline: true,
             actuators: alist,
           });
         });
       },
       // Helps during debugging, remove in production
-      debug: (str) => {
+      /*debug: (str) => {
         console.log(new Date(), str);
-      },
+      },*/
     });
 
     this.client.activate();
-    //this.client.send('/sensors', { priority: 9 }, 'Hello, STOMP');
   }
   askSensors() {
     //sensors = [];
@@ -101,9 +96,10 @@ class Minigrowl extends React.Component {
       .get(`http://${apiHost}:${apiPort}/api/minigrowl/v1/sensors`)
       .then((response) => {
         const sensors = response.data;
-        this.setState({ sensors });
+        this.setState({ sensors, isOnline: true });
       })
       .catch(function (error) {
+        this.setState({ isOnline: false });
         console.log(error);
       });
   }
@@ -113,9 +109,10 @@ class Minigrowl extends React.Component {
       .get(`http://${apiHost}:${apiPort}/api/minigrowl/v1/actuators`)
       .then((response) => {
         const actuators = response.data;
-        this.setState({ actuators });
+        this.setState({ actuators, isOnline: true });
       })
       .catch(function (error) {
+        this.setState({ isOnline: false });
         console.log(error);
       });
   }
@@ -125,20 +122,20 @@ class Minigrowl extends React.Component {
       .get(`http://${apiHost}:${apiPort}/api/minigrowl/v1/sensors/${sensor.id}/hourChart`)
       .then((response) => {
         const chartDatar = response.data;
-        this.setState({ chartData: chartDatar, chartSensor: sensor });
+        this.setState({ chartData: chartDatar, chartSensor: sensor, isOnline: true });
       })
       .catch(function (error) {
         console.log(error);
+        this.setState({ isOnline: false });
       });
   }
-  // componentWillMount() {
-  // this.webSock();
-  //}
+
   componentDidMount() {
     this.askSensors();
     this.askActuators();
     this.webSock();
   }
+
   sendCommand(command) {
     console.log('Sending command:');
     console.log(command);
@@ -154,14 +151,13 @@ class Minigrowl extends React.Component {
         console.log(error);
       });
   }
+
   render() {
     return (
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <AppBar color="inherit">
-          <Eco />
-          <Typography variant="h4">Minigrowl</Typography>
-        </AppBar>
+
+        <MinigrowlAppBar value={this.state} />
 
         <div className="App">
           <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
@@ -180,8 +176,8 @@ class Minigrowl extends React.Component {
 
           <MinigrowlDashboard
             value={this.state}
-            onAskChartData={(sens) => this.askChartData(sens)}
-            onCommand={(com) => this.sendCommand(com)}
+            onAskChartData={(aboutWhichSensor) => this.askChartData(aboutWhichSensor)}
+            onCommand={(whichCommand) => this.sendCommand(whichCommand)}
           />
         </div>
       </ThemeProvider>

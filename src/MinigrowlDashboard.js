@@ -28,7 +28,7 @@ function Copyright() {
         </span>{' '}
         in Bologna by
       </Link>{' '}
-      Shine - {new Date().getFullYear()}
+      Shine - 03/2020
       {'.'}
     </Typography>
   );
@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
   },
   fixedHeight: {
-    height: 240,
+    height: 360,
   },
   formControl: {
     margin: theme.spacing(1),
@@ -95,8 +95,7 @@ export default function MinigrowlDashboard(props) {
   const classes = useStyles();
   const sensors = props.value.sensors;
   const actuators = props.value.actuators;
-  //const chartData = props.value.chartData;
-  const charsensor = props.value.chartSensor;
+
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   //console.log(Object.values(datac));
@@ -112,7 +111,9 @@ export default function MinigrowlDashboard(props) {
   return (
     <Container maxWidth="lg" className={classes.container}>
       <div></div>
-      <Typography variant="h3">Dispositivi</Typography>
+      <Typography align="left" variant="h3">
+        Dispositivi
+      </Typography>
       <Grid container spacing={3}>
         {actuators.map((senso) => (
           <Grid key={senso.id} item xs={12} md={4} lg={3} sm={6}>
@@ -123,7 +124,9 @@ export default function MinigrowlDashboard(props) {
         ))}
         <div className={classes.appBarSpacer} />
         <Grid item xs={12}>
-          <Typography variant="h3">Sensori</Typography>
+          <Typography align="left" variant="h3">
+            Sensori
+          </Typography>
           <Paper className={classes.paper}>
             <SensorsTab value={sensors} />
           </Paper>
@@ -143,7 +146,7 @@ export default function MinigrowlDashboard(props) {
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  value={charsensor}
+                  value={props.value.chartSensor}
                   onChange={handleChangeChart}
                 >
                   {sensors.map((sensorchart) => (
