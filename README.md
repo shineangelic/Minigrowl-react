@@ -1,14 +1,18 @@
 # Minigrowl-react
 
-This is the web client for minigrowl, a project to drive a generic **growroom**. 
+This is the web client for minigrowl, a project to drive a generic **growroom**.
 
-Minigrow APIs are based on three kind of objects: sensors, actuators and commands. While the first tho reflec real hardware devices with their own reading, the command is an abstraction used to drive such devices. Please see [Microgrowl-spring README](https://shineangelic.github.io/Minigrowl-spring/) for general concepts.
+Minigrow APIs are based on three kind of objects: sensors, actuators and commands. While the first tho reflec real hardware devices with their own reading, the command is an abstraction used to drive such devices. Please see [Microgrowl-spring](https://shineangelic.github.io/Minigrowl-spring/) for general concepts and [Microgrowl-ESP32](https://shineangelic.github.io/Minigrowl-ESP-LoRa32-OLED/) for harware explanation.
 
-![screenshot](/docs/scrrenDesktop1.png) 
+![screenshot](/docs/scrrenDesktop1.png)
 
 Thanks to [@hatemalimam](https://github.com/hatemalimam) for bootstrapping it, I am a react novice, so please take this project as it comes. Enabling web-sockets was really satisfactory, please point out any possible improvement creating an issue.
 
-![screenshot](/docs/scrrenDesktop2.png) 
+![screenshot](/docs/scrrenDesktop2.png)
+
+This app can control real devices over JSON, show sensors readings and plot charts with data taken from minigrowl-spring MongoDB's module.
+
+![charts screenshot](/docs/charts.png)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
@@ -78,4 +82,3 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `yarn build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
-
