@@ -96,22 +96,19 @@ export default function MinigrowlDashboard(props) {
   const sensors = props.value.sensors;
   const actuators = props.value.actuators;
   //const chartData = props.value.chartData;
-  const charsensor = props.value.sensors[1];
+  const charsensor = props.value.chartSensor;
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   //console.log(Object.values(datac));
   const handleChangeChart = (event) => {
-    // props.setState({ charsensor: event.target.value });
-    askChart(event.target.value);
+    // async chart data req
+    props.onAskChartData(event.target.value);
   };
 
-  function handleClick(comman) {
+  function handleActuatorClick(comman) {
     props.onCommand(comman);
   }
-  function askChart(sens) {
-    console.log(sens);
-    props.onAskChartData(sens);
-  }
+
   return (
     <Container maxWidth="lg" className={classes.container}>
       <div></div>
@@ -120,7 +117,7 @@ export default function MinigrowlDashboard(props) {
         {actuators.map((senso) => (
           <Grid key={senso.id} item xs={12} md={4} lg={3} sm={6}>
             <Paper>
-              <MinigrowlActuator value={senso} onClick={(sens) => handleClick(sens)} />
+              <MinigrowlActuator value={senso} onClick={(sens) => handleActuatorClick(sens)} />
             </Paper>
           </Grid>
         ))}
