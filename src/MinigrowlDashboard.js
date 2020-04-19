@@ -17,6 +17,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 
 import './Minigrowl.css';
+import { Button } from '@material-ui/core';
 
 function Copyright() {
   return (
@@ -110,10 +111,22 @@ export default function MinigrowlDashboard(props) {
 
   return (
     <Container maxWidth="lg" className={classes.container}>
-      <div></div>
-      <Typography align="left" variant="h3">
-        Dispositivi
-      </Typography>
+      <Grid item xs={12}>
+        <Grid
+          container
+          spacing={3}
+          justify="space-between" // Add it here :)
+        >
+          <Grid item>
+            <Typography variant="h3">Dispositivi</Typography>
+          </Grid>
+          <Grid item>
+            <FormControl className={classes.formControl}>
+              <Button>Refresh</Button>
+            </FormControl>
+          </Grid>
+        </Grid>
+      </Grid>
       <Grid container spacing={3}>
         {actuators.map((senso) => (
           <Grid key={senso.id} item xs={12} md={4} lg={3} sm={6}>
@@ -124,9 +137,21 @@ export default function MinigrowlDashboard(props) {
         ))}
         <div className={classes.appBarSpacer} />
         <Grid item xs={12}>
-          <Typography align="left" variant="h3">
-            Sensori
-          </Typography>
+          <Grid
+            container
+            spacing={3}
+            justify="space-between" // Add it here :)
+          >
+            <Grid item>
+              <Typography variant="h3">Sensori</Typography>
+            </Grid>
+            <Grid item>
+              <FormControl className={classes.formControl}>
+                <Button onClick={() => props.onAskAllSensors()}>Refresh</Button>
+              </FormControl>
+            </Grid>
+          </Grid>
+
           <Paper className={classes.paper}>
             <SensorsTab value={sensors} />
           </Paper>

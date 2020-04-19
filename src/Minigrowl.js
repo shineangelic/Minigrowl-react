@@ -59,7 +59,7 @@ class Minigrowl extends React.Component {
     this.client.configure({
       brokerURL: `ws://${apiHost}:${apiPort}/minigrowl-ws/websocket`,
       onConnect: () => {
-        console.log('onConnect');
+        console.log('WEBSOCKET CONNECTED');
 
         this.client.subscribe('/topic/sensors', (message) => {
           const sens = message.body;
@@ -82,6 +82,9 @@ class Minigrowl extends React.Component {
           });
         });
       },
+      onWebSocketError: () => {
+        console.log('WEBSOCKET ERR');
+      },
       // Helps during debugging, remove in production
       /*debug: (str) => {
         console.log(new Date(), str);
@@ -99,12 +102,11 @@ class Minigrowl extends React.Component {
         this.setState({ sensors, isOnline: true });
       })
       .catch(function (error) {
-        this.setState({ isOnline: false });
+        //this.setState({ isOnline: false });
         console.log(error);
       });
   }
   askActuators() {
-    //sensors = [];
     axios
       .get(`http://${apiHost}:${apiPort}/api/minigrowl/v1/actuators`)
       .then((response) => {
@@ -112,12 +114,11 @@ class Minigrowl extends React.Component {
         this.setState({ actuators, isOnline: true });
       })
       .catch(function (error) {
-        this.setState({ isOnline: false });
+        //this.setState({ isOnline: false });
         console.log(error);
       });
   }
   askChartData(sensor) {
-    //sensors = [];
     axios
       .get(`http://${apiHost}:${apiPort}/api/minigrowl/v1/sensors/${sensor.id}/hourChart`)
       .then((response) => {
@@ -143,7 +144,6 @@ class Minigrowl extends React.Component {
       .put(`http://${apiHost}:${apiPort}/api/minigrowl/v1/commands/queue/add`, command, {
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
       })
-
       .then((response) => {
         console.log('Comando eseguito');
       })
@@ -178,6 +178,7 @@ class Minigrowl extends React.Component {
             value={this.state}
             onAskChartData={(aboutWhichSensor) => this.askChartData(aboutWhichSensor)}
             onCommand={(whichCommand) => this.sendCommand(whichCommand)}
+            onAskAllSensors={() => this.askSensors()}
           />
         </div>
       </ThemeProvider>

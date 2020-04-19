@@ -7,6 +7,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import { ErrorOutline } from '@material-ui/icons';
+import { Button } from '@material-ui/core';
 
 function preventDefault(event) {
   event.preventDefault();
@@ -49,11 +50,6 @@ export default function SensorsTab(props) {
           ))}
         </TableBody>
       </Table>
-      <div className={classes.seeMore}>
-        <Link color="primary" href="#" onClick={preventDefault}>
-          See more orders
-        </Link>
-      </div>
     </React.Fragment>
   );
 }

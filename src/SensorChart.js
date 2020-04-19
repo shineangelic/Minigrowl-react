@@ -4,7 +4,7 @@ import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer, Tooltip, Car
 
 export default function SensorChart(props) {
   const theme = useTheme();
-  console.log(props.value.value);
+  //console.log(props.value.value);
   const dataSerie = props.value.value.chartData;
 
   return (
