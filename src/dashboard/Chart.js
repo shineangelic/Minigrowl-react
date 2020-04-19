@@ -8,7 +8,7 @@ function createData(time, amount) {
   return { time, amount };
 }
 
-const data = [
+const datac = [
   createData('00:00', 0),
   createData('03:00', 300),
   createData('06:00', 600),
@@ -28,7 +28,7 @@ export default function Chart() {
       <Title>Today</Title>
       <ResponsiveContainer>
         <LineChart
-          data={data}
+          data={datac}
           margin={{
             top: 16,
             right: 16,
@@ -38,11 +38,7 @@ export default function Chart() {
         >
           <XAxis dataKey="time" stroke={theme.palette.text.secondary} />
           <YAxis stroke={theme.palette.text.secondary}>
-            <Label
-              angle={270}
-              position="left"
-              style={{ textAnchor: 'middle', fill: theme.palette.text.primary }}
-            >
+            <Label angle={270} position="left" style={{ textAnchor: 'middle', fill: theme.palette.text.primary }}>
               Sales ($)
             </Label>
           </YAxis>

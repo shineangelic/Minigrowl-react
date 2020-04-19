@@ -3,7 +3,6 @@ import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import List from '@material-ui/core/List';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -37,9 +36,6 @@ import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 @author shine@angelic.it
 */
 const formatter = buildFormatter(frenchStrings);
-function preventDefault(event) {
-  event.preventDefault();
-}
 
 const MODE_MANUAL = -1;
 const MODE_AUTO = -2;
@@ -71,27 +67,26 @@ export default function MinigrowlActuator(props) {
   const classes = useStyles();
 
   const att = props.value;
-  const dateT = Date(att.timeStamp);
+  //const dateT = Date(att.timeStamp);
   const [expanded, setExpanded] = React.useState(false);
 
   function isComandEnabled(comando) {
-    if (comando.val == MODE_MANUAL || comando.val == MODE_AUTO) {
-      return att.mode == comando.val; //mode command
+    if (comando.val === MODE_MANUAL || comando.val === MODE_AUTO) {
+      return att.mode === comando.val; //mode command
     } else {
       //real command
-      return att.val == comando.val || att.mode == MODE_AUTO;
+      return att.val === comando.val || att.mode === MODE_AUTO;
     }
   }
 
   function getDeviceIcon(device) {
-    const limee = lime[500]; // #F44336
-    if (device.typ == 'FAN') return <Toys style={{ color: att.val == 1 ? lime[50] : '' }}></Toys>;
-    if (device.typ == 'OUTTAKE') return <Launch style={{ color: att.val == 1 ? lime[50] : '' }}></Launch>;
-    if (device.typ == 'LIGHT') return <WbIncandescent style={{ color: att.val == 1 ? lime[50] : '' }}></WbIncandescent>;
-    if (device.typ == 'HVAC') return <Whatshot style={{ color: att.val == 1 ? lime[50] : '' }}></Whatshot>;
-    if (device.typ == 'HUMIDIFIER') return <LocalDrink style={{ color: att.val == 1 ? lime[50] : '' }}></LocalDrink>;
+    if (device.typ === 'FAN') return <Toys style={{ color: att.val === 1 ? lime[50] : '' }}></Toys>;
+    if (device.typ === 'OUTTAKE') return <Launch style={{ color: att.val === 1 ? lime[50] : '' }}></Launch>;
+    if (device.typ === 'LIGHT') return <WbIncandescent style={{ color: att.val === 1 ? lime[50] : '' }}></WbIncandescent>;
+    if (device.typ === 'HVAC') return <Whatshot style={{ color: att.val === 1 ? lime[50] : '' }}></Whatshot>;
+    if (device.typ === 'HUMIDIFIER') return <LocalDrink style={{ color: att.val === 1 ? lime[50] : '' }}></LocalDrink>;
     //default
-    return <Share color={att.val == 1 ? 'primary' : 'secondary'}></Share>;
+    return <Share color={att.val === 1 ? 'primary' : 'secondary'}></Share>;
   }
 
   const handleExpandClick = () => {
@@ -110,20 +105,14 @@ export default function MinigrowlActuator(props) {
             </Avatar>
           }
           title={titStr}
-          subheader={
-            <TimeAgo
-              formatter={formatter}
-              date={new Date(att.timeStamp)}
-              render={({ error, value }) => <span>{value}</span>}
-            />
-          }
+          subheader={<TimeAgo formatter={formatter} date={new Date(att.timeStamp)} />}
         />
 
         <CardMedia className={classes.media} image={imageStr} title="Device" />
         {att.type}
         <CardContent>
           <Typography variant="h4" component="p">
-            {att.val == 1 ? 'Acceso' : 'Spento'}
+            {att.val === 1 ? 'Acceso' : 'Spento'}
           </Typography>
           {att.err && <Alert severity="error">Dispositivo in errore!</Alert>}
         </CardContent>
@@ -142,13 +131,13 @@ export default function MinigrowlActuator(props) {
         </CardActions>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
-            <Typography paragraph>Modalità: {att.mode == MODE_AUTO ? 'Auto' : 'Manual'}</Typography>
+            <Typography paragraph>Modalità: {att.mode === MODE_AUTO ? 'Auto' : 'Manual'}</Typography>
             <Typography paragraph>
               La modalita` AUTO segue la programmazione definita sulla scheda e disabilita i comandi manuali
             </Typography>
             <Typography color="textSecondary" className={classes.depositContext}></Typography>
             {att.cmds.map((comando) => (
-              <Box display="flex" alignItems="center" justifyContent="center">
+              <Box key={comando.name} display="flex" alignItems="center" justifyContent="center">
                 <CardActions>
                   <Button
                     fullWidth
@@ -161,10 +150,10 @@ export default function MinigrowlActuator(props) {
                       props.onClick(comando);
                     }}
                   >
-                    {comando.val == MODE_MANUAL ? <TouchApp /> : ''}
-                    {comando.val == MODE_AUTO ? <FlashAuto /> : ''}
-                    {comando.val == 1 ? <ToggleOn /> : ''}
-                    {comando.val == 0 ? <ToggleOff /> : ''}
+                    {comando.val === MODE_MANUAL ? <TouchApp /> : ''}
+                    {comando.val === MODE_AUTO ? <FlashAuto /> : ''}
+                    {comando.val === 1 ? <ToggleOn /> : ''}
+                    {comando.val === 0 ? <ToggleOff /> : ''}
                     {comando.name}
                   </Button>
                 </CardActions>

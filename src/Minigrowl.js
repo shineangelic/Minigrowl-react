@@ -9,6 +9,7 @@ import { ThemeProvider } from '@material-ui/styles';
 
 import { AppBar, CssBaseline, Typography, createMuiTheme } from '@material-ui/core';
 import { Eco } from '@material-ui/icons';
+
 const theme = createMuiTheme({
   palette: {
     type: 'dark',
@@ -23,6 +24,8 @@ class Minigrowl extends React.Component {
     this.state = {
       sensors: [],
       actuators: [],
+      chartData: [],
+      chartSensor: {},
       xIsNext: true,
     };
   }
@@ -86,9 +89,21 @@ class Minigrowl extends React.Component {
         console.log(error);
       });
   }
-  componentWillMount() {
-    this.webSock();
+  askChartData(sensor) {
+    //sensors = [];
+    axios
+      .get(`http://${apiHost}:${apiPort}/api/minigrowl/v1/sensors/${sensor.id}/hourChart`)
+      .then((response) => {
+        const chartDatar = response.data;
+        this.setState({ chartData: chartDatar, chartSensor: sensor });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }
+  // componentWillMount() {
+  // this.webSock();
+  //}
   componentDidMount() {
     this.askSensors();
     this.askActuators();
@@ -110,11 +125,6 @@ class Minigrowl extends React.Component {
       });
   }
   render() {
-    const darkTheme = createMuiTheme({
-      palette: {
-        type: 'dark',
-      },
-    });
     return (
       <ThemeProvider theme={theme}>
         <CssBaseline />
@@ -138,7 +148,11 @@ class Minigrowl extends React.Component {
             Minigrowl: Opensource growroom controller
           </Link>
 
-          <MinigrowlDashboard value={this.state} onCommand={(com) => this.sendCommand(com)} />
+          <MinigrowlDashboard
+            value={this.state}
+            onAskChartData={(sens) => this.askChartData(sens)}
+            onCommand={(com) => this.sendCommand(com)}
+          />
         </div>
       </ThemeProvider>
     );

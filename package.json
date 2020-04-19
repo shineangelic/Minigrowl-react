@@ -17,8 +17,10 @@
     "react-dom": "^16.13.1",
     "react-moment": "^0.9.7",
     "react-scripts": "3.4.1",
+    "react-select": "^3.1.0",
     "react-stomp": "^5.0.0",
     "react-timeago": "^4.4.0",
+    "recharts": "^1.8.5",
     "typeface-roboto": "^0.0.75",
     "websocket": "^1.0.31"
   },

@@ -9,6 +9,12 @@ import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import MinigrowlActuator from './MinigrowlActuator';
 import SensorsTab from './SensorsTab';
+import SensorsChart from './SensorChart';
+
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
 
 import './Minigrowl.css';
 
@@ -76,24 +82,41 @@ const useStyles = makeStyles((theme) => ({
   fixedHeight: {
     height: 240,
   },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
 }));
 
 export default function MinigrowlDashboard(props) {
   const classes = useStyles();
   const sensors = props.value.sensors;
   const actuators = props.value.actuators;
+  //const chartData = props.value.chartData;
+  const charsensor = props.value.sensors[1];
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+
+  //console.log(Object.values(datac));
+  const handleChangeChart = (event) => {
+    // props.setState({ charsensor: event.target.value });
+    askChart(event.target.value);
+  };
 
   function handleClick(comman) {
     props.onCommand(comman);
+  }
+  function askChart(sens) {
+    console.log(sens);
+    props.onAskChartData(sens);
   }
   return (
     <Container maxWidth="lg" className={classes.container}>
       <div></div>
       <Typography variant="h3">Dispositivi</Typography>
       <Grid container spacing={3}>
-        {/* Recent Deposits */}
-
         {actuators.map((senso) => (
           <Grid key={senso.id} item xs={12} md={4} lg={3} sm={6}>
             <Paper>
@@ -104,7 +127,40 @@ export default function MinigrowlDashboard(props) {
         <div className={classes.appBarSpacer} />
         <Grid item xs={12}>
           <Typography variant="h3">Sensori</Typography>
-          <Paper className={classes.paper}>{<SensorsTab value={sensors} />}</Paper>
+          <Paper className={classes.paper}>
+            <SensorsTab value={sensors} />
+          </Paper>
+        </Grid>
+        <Grid item xs={12}>
+          <Grid
+            container
+            spacing={3}
+            justify="space-between" // Add it here :)
+          >
+            <Grid item>
+              <Typography variant="h3">Grafici</Typography>
+            </Grid>
+            <Grid item>
+              <FormControl className={classes.formControl}>
+                <InputLabel id="demo-simple-select-label">Sensore</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={charsensor}
+                  onChange={handleChangeChart}
+                >
+                  {sensors.map((sensorchart) => (
+                    <MenuItem key={sensorchart.id} value={sensorchart}>
+                      {sensorchart.typ} ({sensorchart.id})
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+          <Paper className={fixedHeightPaper}>
+            <SensorsChart value={props} />
+          </Paper>
         </Grid>
       </Grid>
       <Box pt={4}>
