@@ -30,6 +30,7 @@ import TimeAgo from 'react-timeago';
 import lime from '@material-ui/core/colors/lime';
 import frenchStrings from 'react-timeago/lib/language-strings/it';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
+import { useTheme } from '@material-ui/core/styles';
 /* MyFirst react Class. Don't blast me
 04/2020 coronavirus past-time
 
@@ -65,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MinigrowlActuator(props) {
   const classes = useStyles();
-
+  const theme = useTheme();
   const att = props.value;
   //const dateT = Date(att.timeStamp);
   const [expanded, setExpanded] = React.useState(false);
@@ -80,11 +81,15 @@ export default function MinigrowlActuator(props) {
   }
 
   function getDeviceIcon(device) {
-    if (device.typ === 'FAN') return <Toys style={{ color: att.val == 1 ? lime[50] : '' }}></Toys>;
-    if (device.typ === 'OUTTAKE') return <Launch style={{ color: att.val == 1 ? lime[50] : '' }}></Launch>;
-    if (device.typ === 'LIGHT') return <WbIncandescent style={{ color: att.val == 1 ? lime[50] : '' }}></WbIncandescent>;
-    if (device.typ === 'HVAC') return <Whatshot style={{ color: att.val == 1 ? lime[50] : '' }}></Whatshot>;
-    if (device.typ === 'HUMIDIFIER') return <LocalDrink style={{ color: att.val == 1 ? lime[50] : '' }}></LocalDrink>;
+    if (device.typ === 'FAN') return <Toys style={{ color: att.val == 1 ? theme.palette.success.light : '' }}></Toys>;
+    if (device.typ === 'OUTTAKE')
+      return <Launch style={{ color: att.val == 1 ? theme.palette.success.light : '' }}></Launch>;
+    if (device.typ === 'LIGHT')
+      return <WbIncandescent style={{ color: att.val == 1 ? theme.palette.success.light : '' }}></WbIncandescent>;
+    if (device.typ === 'HVAC')
+      return <Whatshot style={{ color: att.val == 1 ? theme.palette.success.light : '' }}></Whatshot>;
+    if (device.typ === 'HUMIDIFIER')
+      return <LocalDrink style={{ color: att.val == 1 ? theme.palette.success.light : '' }}></LocalDrink>;
     //default
     return <Share color={att.val == 1 ? 'primary' : 'secondary'}></Share>;
   }
@@ -111,7 +116,7 @@ export default function MinigrowlActuator(props) {
         <CardMedia className={classes.media} image={imageStr} title="Device" />
         {att.type}
         <CardContent>
-          <Typography variant="h4" component="p">
+          <Typography style={{ color: att.val != 0 ? theme.palette.success.light : '' }} variant="h4" component="p">
             {att.val == 1 ? 'Acceso' : 'Spento'}
           </Typography>
           {att.err && <Alert severity="error">Dispositivo in errore!</Alert>}
