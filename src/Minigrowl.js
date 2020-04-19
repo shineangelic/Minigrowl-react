@@ -5,6 +5,7 @@ import Link from '@material-ui/core/Link';
 import MinigrowlDashboard from './MinigrowlDashboard';
 import { Client } from '@stomp/stompjs';
 import './Minigrowl.css';
+import update from 'react-addons-update'; // ES6
 import { ThemeProvider } from '@material-ui/styles';
 
 import { AppBar, CssBaseline, Typography, createMuiTheme } from '@material-ui/core';
@@ -29,7 +30,30 @@ class Minigrowl extends React.Component {
       xIsNext: true,
     };
   }
-
+  onUpdateItem = (updatedSensor) => {
+    console.log('UPDATE ' + updatedSensor.id);
+    const list = this.state.sensors.map((sensor, j) => {
+      if (sensor.id === updatedSensor.id) {
+        //e` lui!
+        return updatedSensor;
+      } else {
+        return sensor;
+      }
+    });
+    return list;
+  };
+  onUpdateActuator = (updatedActuator) => {
+    console.log('UPDATE ' + updatedActuator.id);
+    const list = this.state.actuators.map((act, j) => {
+      if (act.id === updatedActuator.id) {
+        //e` lui!
+        return updatedActuator;
+      } else {
+        return act;
+      }
+    });
+    return list;
+  };
   webSock() {
     console.log('Component did mount');
     // The compat mode syntax is totally different, converting to v5 syntax
@@ -44,16 +68,22 @@ class Minigrowl extends React.Component {
         this.client.subscribe('/topic/sensors', (message) => {
           const sens = message.body;
           console.log('SENSORI ASYNC RECV' + sens);
-          const sensors = JSON.parse(sens);
-          this.setState({ sensors });
-          //OK, ORA ?
+          const newSensor = JSON.parse(sens);
+          const slist = this.onUpdateItem(newSensor);
+          ///ieeee aggiorno solo quello ciusto
+          this.setState({
+            sensors: slist,
+          });
         });
         this.client.subscribe('/topic/actuators', (message) => {
           const sens = message.body;
           console.log('ACT ASYNC RECV' + sens);
-          const actuators = JSON.parse(sens);
-          this.setState({ actuators });
-          //OK, ORA ?
+          const actuator = JSON.parse(sens);
+          const alist = this.onUpdateActuator(actuator);
+          ///ieeee aggiorno solo quello ciusto
+          this.setState({
+            actuators: alist,
+          });
         });
       },
       // Helps during debugging, remove in production
