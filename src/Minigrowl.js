@@ -8,6 +8,7 @@ import { ThemeProvider } from '@material-ui/styles';
 import { CssBaseline, Typography, createMuiTheme } from '@material-ui/core';
 import MinigrowlAppBar from './MinigrowlAppBar';
 import './Minigrowl.css';
+require('dotenv').config({ path: '/' });
 
 const theme = createMuiTheme({
   palette: {
@@ -15,8 +16,9 @@ const theme = createMuiTheme({
   },
 });
 
-const apiHost = '192.168.0.54'; // 192.168.0.54
-const apiPort = '8000'; // 192.168.0.54
+//{process.env.REACT_APP_API_HOST}; //for example 192.168.0.54 must be defined in root folder's .env file
+//{process.env.REACT_APP_API_PORT}; //same as above
+
 class Minigrowl extends React.Component {
   constructor(props) {
     super(props);
@@ -57,7 +59,7 @@ class Minigrowl extends React.Component {
     this.client = new Client();
 
     this.client.configure({
-      brokerURL: `ws://${apiHost}:${apiPort}/minigrowl-ws/websocket`,
+      brokerURL: `wss://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/minigrowl-ws/websocket`,
       onConnect: () => {
         console.log('WEBSOCKET CONNECTED');
 
@@ -96,7 +98,7 @@ class Minigrowl extends React.Component {
   askSensors() {
     //sensors = [];
     axios
-      .get(`http://${apiHost}:${apiPort}/api/minigrowl/v1/sensors`)
+      .get(`https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v1/sensors`)
       .then((response) => {
         const sensors = response.data;
         this.setState({ sensors, isOnline: true });
@@ -108,7 +110,7 @@ class Minigrowl extends React.Component {
   }
   askActuators() {
     axios
-      .get(`http://${apiHost}:${apiPort}/api/minigrowl/v1/actuators`)
+      .get(`https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v1/actuators`)
       .then((response) => {
         const actuators = response.data;
         this.setState({ actuators, isOnline: true });
@@ -120,7 +122,9 @@ class Minigrowl extends React.Component {
   }
   askChartData(sensor) {
     axios
-      .get(`http://${apiHost}:${apiPort}/api/minigrowl/v1/sensors/${sensor.id}/hourChart`)
+      .get(
+        `https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v1/sensors/${sensor.id}/hourChart`,
+      )
       .then((response) => {
         const chartDatar = response.data;
         this.setState({ chartData: chartDatar, chartSensor: sensor, isOnline: true });
@@ -141,9 +145,13 @@ class Minigrowl extends React.Component {
     console.log('Sending command:');
     console.log(command);
     axios
-      .put(`http://${apiHost}:${apiPort}/api/minigrowl/v1/commands/queue/add`, command, {
-        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-      })
+      .put(
+        `https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v1/commands/queue/add`,
+        command,
+        {
+          headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        },
+      )
       .then((response) => {
         console.log('Comando eseguito');
       })
