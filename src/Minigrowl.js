@@ -1,11 +1,13 @@
 import React from 'react';
 import axios from 'axios';
-import logo from './logo.svg';
-import Link from '@material-ui/core/Link';
-import MinigrowlDashboard from './MinigrowlDashboard';
 import { Client } from '@stomp/stompjs';
 import { ThemeProvider } from '@material-ui/styles';
 import { CssBaseline, Typography, createMuiTheme } from '@material-ui/core';
+import Link from '@material-ui/core/Link';
+import { withTranslation } from 'react-i18next';
+import logo from './logo.svg';
+import MinigrowlDashboard from './MinigrowlDashboard';
+import i18n from './i18n/i18n'; // eslint-disable-line no-unused-vars
 import MinigrowlAppBar from './MinigrowlAppBar';
 import './Minigrowl.css';
 require('dotenv').config({ path: '/' });
@@ -93,7 +95,7 @@ class Minigrowl extends React.Component {
       },*/
     });
 
-    this.client.activate();
+    // this.client.activate();
   }
   askSensors() {
     //sensors = [];
@@ -161,6 +163,7 @@ class Minigrowl extends React.Component {
   }
 
   render() {
+    const { t } = this.props;
     return (
       <ThemeProvider theme={theme}>
         <CssBaseline />
@@ -171,7 +174,7 @@ class Minigrowl extends React.Component {
           <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
           <img src={logo} className="App-logo" alt="logo" />
           <Typography variant="h6">
-            Gestione <code>Minigrowl</code>
+            Gestione <code>{t('common:appName')}</code>
           </Typography>
           <Link
             className="App-link"
@@ -193,4 +196,5 @@ class Minigrowl extends React.Component {
     );
   }
 }
-export default Minigrowl;
+
+export default withTranslation()(Minigrowl);
