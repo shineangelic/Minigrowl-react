@@ -69,6 +69,8 @@ export default function MinigrowlActuator(props) {
   const theme = useTheme();
   const t = props.t;
   const att = props.value;
+  //does not work
+  const sortedCmds = att.cmds.sort((a, b) => a.val > b.val);
   //const dateT = Date(att.timeStamp);
   const [expanded, setExpanded] = React.useState(false);
 
@@ -142,7 +144,8 @@ export default function MinigrowlActuator(props) {
             </Typography>
             <Typography paragraph>{t('devices:autodesc')}</Typography>
             <Typography color="textSecondary" className={classes.depositContext}></Typography>
-            {att.cmds.map((comando) => (
+
+            {sortedCmds.map((comando) => (
               <Box key={comando.name} display="flex" alignItems="center" justifyContent="center">
                 <CardActions>
                   <Button
