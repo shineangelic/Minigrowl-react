@@ -103,6 +103,8 @@ class Minigrowl extends React.Component {
       .get(`https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v1/sensors`)
       .then((response) => {
         const sensors = response.data;
+        console.log('Received all SENSORS: ');
+        console.log(sensors);
         this.setState({ sensors, isOnline: true });
       })
       .catch(function (error) {
@@ -115,6 +117,8 @@ class Minigrowl extends React.Component {
       .get(`https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v1/actuators`)
       .then((response) => {
         const actuators = response.data;
+        console.log('Received all ACTUATORS: ');
+        console.log(actuators);
         this.setState({ actuators, isOnline: true });
       })
       .catch(function (error) {
@@ -186,10 +190,12 @@ class Minigrowl extends React.Component {
           </Link>
 
           <MinigrowlDashboard
+            t={t}
             value={this.state}
             onAskChartData={(aboutWhichSensor) => this.askChartData(aboutWhichSensor)}
             onCommand={(whichCommand) => this.sendCommand(whichCommand)}
             onAskAllSensors={() => this.askSensors()}
+            onAskAllActuators={() => this.askActuators()}
           />
         </div>
       </ThemeProvider>

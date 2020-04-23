@@ -1,9 +1,27 @@
 {
   "common": {
-    "appName": "Minigrowl IT"
+    "appName": "Minigrowl IT",
+    "refresh": "Aggiorna",
+    "charts": "Grafici",
+    "commands": "Comandi",
+    "on": "Acceso",
+    "off": "Spento"
   },
   "languages": {
     "it": "Italian",
     "en": "English"
+  },
+  "devices": {
+    "devices": "Dispositivi",
+    "FAN": "Ventilatore",
+    "OUTTAKE": "Estrattore",
+    "LIGHT": "Luci",
+    "HVAC": "Riscaldamento",
+    "HUMIDIFIER": "Umidificatore",
+    "autodesc": "La modalita` AUTO segue la programmazione definita sulla scheda e disabilita i comandi manuali"
+  },
+  "sensor": {
+    "sensors": "Sensori",
+    "sensor": "Sensore"
   }
 }

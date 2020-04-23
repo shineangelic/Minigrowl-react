@@ -10,7 +10,6 @@ import Typography from '@material-ui/core/Typography';
 import MinigrowlActuator from './MinigrowlActuator';
 import SensorsTab from './SensorsTab';
 import SensorsChart from './SensorChart';
-
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -108,7 +107,7 @@ export default function MinigrowlDashboard(props) {
   function handleActuatorClick(comman) {
     props.onCommand(comman);
   }
-
+  const { t } = props;
   return (
     <Container maxWidth="lg" className={classes.container}>
       <Grid item xs={12}>
@@ -118,11 +117,11 @@ export default function MinigrowlDashboard(props) {
           justify="space-between" // Add it here :)
         >
           <Grid item>
-            <Typography variant="h3">Dispositivi</Typography>
+            <Typography variant="h3">{t('devices:devices')}</Typography>
           </Grid>
           <Grid item>
             <FormControl className={classes.formControl}>
-              <Button>Refresh</Button>
+              <Button onClick={() => props.onAskAllActuators()}>{t('common:refresh')}</Button>
             </FormControl>
           </Grid>
         </Grid>
@@ -131,7 +130,7 @@ export default function MinigrowlDashboard(props) {
         {actuators.map((senso) => (
           <Grid key={senso.id} item xs={12} md={4} lg={3} sm={6}>
             <Paper>
-              <MinigrowlActuator value={senso} onClick={(sens) => handleActuatorClick(sens)} />
+              <MinigrowlActuator t={t} value={senso} onClick={(sens) => handleActuatorClick(sens)} />
             </Paper>
           </Grid>
         ))}
@@ -143,11 +142,11 @@ export default function MinigrowlDashboard(props) {
             justify="space-between" // Add it here :)
           >
             <Grid item>
-              <Typography variant="h3">Sensori</Typography>
+              <Typography variant="h3">{t('sensor:sensors')}</Typography>
             </Grid>
             <Grid item>
               <FormControl className={classes.formControl}>
-                <Button onClick={() => props.onAskAllSensors()}>Refresh</Button>
+                <Button onClick={() => props.onAskAllSensors()}>{t('common:refresh')}</Button>
               </FormControl>
             </Grid>
           </Grid>
@@ -163,11 +162,11 @@ export default function MinigrowlDashboard(props) {
             justify="space-between" // Add it here :)
           >
             <Grid item>
-              <Typography variant="h3">Grafici</Typography>
+              <Typography variant="h3">{t('common:charts')}</Typography>
             </Grid>
             <Grid item>
               <FormControl className={classes.formControl}>
-                <InputLabel id="demo-simple-select-label">Sensore</InputLabel>
+                <InputLabel id="demo-simple-select-label">{t('sensors:sensor')}</InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"

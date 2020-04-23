@@ -67,6 +67,7 @@ const useStyles = makeStyles((theme) => ({
 export default function MinigrowlActuator(props) {
   const classes = useStyles();
   const theme = useTheme();
+  const t = props.t;
   const att = props.value;
   //const dateT = Date(att.timeStamp);
   const [expanded, setExpanded] = React.useState(false);
@@ -99,7 +100,7 @@ export default function MinigrowlActuator(props) {
   };
 
   const imageStr = '/static/' + att.typ + '.jpg';
-  const titStr = att.typ + ' (on PIN ' + att.id + ')';
+  const titStr = t('devices:' + att.typ) + ' (on PIN ' + att.id + ')';
   return (
     <React.Fragment>
       <Card className={classes.root}>
@@ -117,12 +118,12 @@ export default function MinigrowlActuator(props) {
         {att.type}
         <CardContent>
           <Typography style={{ color: att.val != 0 ? theme.palette.success.light : '' }} variant="h4" component="p">
-            {att.val == 1 ? 'Acceso' : 'Spento'}
+            {att.val == 1 ? t('common:on') : t('common:off')}
           </Typography>
           {att.err && <Alert severity="error">Dispositivo in errore!</Alert>}
         </CardContent>
         <CardActions disableSpacing>
-          COMANDI
+          {t('common:commands')}
           <IconButton
             className={clsx(classes.expand, {
               [classes.expandOpen]: expanded,
@@ -137,9 +138,7 @@ export default function MinigrowlActuator(props) {
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
             <Typography paragraph>Modalità: {att.mode == MODE_AUTO ? 'Auto' : 'Manual'}</Typography>
-            <Typography paragraph>
-              La modalita` AUTO segue la programmazione definita sulla scheda e disabilita i comandi manuali
-            </Typography>
+            <Typography paragraph>{t('devices:autodesc')}</Typography>
             <Typography color="textSecondary" className={classes.depositContext}></Typography>
             {att.cmds.map((comando) => (
               <Box key={comando.name} display="flex" alignItems="center" justifyContent="center">

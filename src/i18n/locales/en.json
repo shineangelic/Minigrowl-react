@@ -1,9 +1,27 @@
 {
   "common": {
-    "appName": "Minigrowl EN"
+    "appName": "Minigrowl EN",
+    "refresh": "Refresh",
+    "charts": "Charts",
+    "commands": "Commands",
+    "on": "Turned ON",
+    "off": "Switched OFF"
   },
   "languages": {
     "it": "Italian",
     "en": "English"
+  },
+  "devices": {
+    "devices": "Devices",
+    "FAN": "Internal Fan",
+    "OUTTAKE": "Centrifugal Fan",
+    "LIGHT": "Main Lights",
+    "HVAC": "Heating",
+    "HUMIDIFIER": "Umidificatore",
+    "autodesc": "AUTO mode follows scheduling defined at board level, thus disabling manual commands."
+  },
+  "sensor": {
+    "sensors": "Sensors",
+    "sensor": "Sensor"
   }
 }
