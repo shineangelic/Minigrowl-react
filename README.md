@@ -1,18 +1,23 @@
 # Minigrowl-react
 
-This is the web client for minigrowl, a project to drive a generic **growroom**.
+This is the web client for minigrowl, a project to drive a generic **growroom**. Tomatoes? Baikal Express? You decide. In any case I decline accountability on how you'll decide to use/modify this software, growing _some kind_ of herbs is not that legal in some countries.
 
-Minigrow APIs are based on three kind of objects: sensors, actuators and commands. While the first tho reflec real hardware devices with their own reading, the command is an abstraction used to drive such devices. Please see [Microgrowl-spring](https://shineangelic.github.io/Minigrowl-spring/) for general concepts and [Microgrowl-ESP32](https://shineangelic.github.io/Minigrowl-ESP-LoRa32-OLED/) for harware explanation.
+Minigrow APIs are based on three kind of JSON objects: `sensors`, `actuators` and `commands`. While the first two reflect real hardware devices with their own reading/status, the command is an abstraction used to drive such devices. Please see [Microgrowl-spring](https://shineangelic.github.io/Minigrowl-spring/) for general concepts and [Microgrowl-ESP32](https://shineangelic.github.io/Minigrowl-ESP-LoRa32-OLED/) for harware explanation and embedded lifecycle behaviour.
 
 ![screenshot](/docs/scrrenDesktop3.png)
 
-Thanks to [@hatemalimam](https://github.com/hatemalimam) for bootstrapping it, I am a react novice, so please take this project as it comes. Enabling web-sockets was really satisfactory, please point out any possible improvement creating an issue.
+Thanks to [@hatemalimam](https://github.com/hatemalimam) for bootstrapping and contributing, I am a react novice, so please take this project as it comes. Enabling web-sockets was really satisfactory, please point out any possible improvement creating an issue.
 
 ![screenshot](/docs/scrrenDesktop2.png)
 
-This app can control real devices over JSON, show sensors readings and plot charts with data taken from minigrowl-spring MongoDB's module.
+This app can control real devices over JSON, show sensors readings and plot charts with data taken from [Microgrowl-spring](https://shineangelic.github.io/Minigrowl-spring/) MongoDB's module. Remember you can't control an `Actuator` unless it's set to `Manual` mode.
 
 ![charts screenshot](/docs/charts.png)
+
+### Known issues
+
+- unfinished i18n
+- charts can't be deleted/reset
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

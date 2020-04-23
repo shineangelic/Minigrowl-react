@@ -142,7 +142,7 @@ export default function MinigrowlDashboard(props) {
             justify="space-between" // Add it here :)
           >
             <Grid item>
-              <Typography variant="h3">{t('sensor:sensors')}</Typography>
+              <Typography variant="h3">{t('sensors:sensors')}</Typography>
             </Grid>
             <Grid item>
               <FormControl className={classes.formControl}>
@@ -152,7 +152,7 @@ export default function MinigrowlDashboard(props) {
           </Grid>
 
           <Paper className={classes.paper}>
-            <SensorsTab value={sensors} />
+            <SensorsTab t={t} value={sensors} />
           </Paper>
         </Grid>
         <Grid item xs={12}>
@@ -183,7 +183,7 @@ export default function MinigrowlDashboard(props) {
             </Grid>
           </Grid>
           <Paper className={fixedHeightPaper}>
-            <SensorsChart value={props} />
+            <SensorsChart t={t} value={props} />
           </Paper>
         </Grid>
       </Grid>

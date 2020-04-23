@@ -13,6 +13,7 @@
   },
   "devices": {
     "devices": "Devices",
+    "mode": "Mode",
     "FAN": "Internal Fan",
     "OUTTAKE": "Centrifugal Fan",
     "LIGHT": "Main Lights",
@@ -20,8 +21,23 @@
     "HUMIDIFIER": "Umidificatore",
     "autodesc": "AUTO mode follows scheduling defined at board level, thus disabling manual commands."
   },
-  "sensor": {
+  "sensors": {
     "sensors": "Sensors",
-    "sensor": "Sensor"
+    "sensor": "Sensor",
+    "error": "Errors",
+    "measure": "Measure",
+    "lastseen": "Last seen",
+    "HUMIDITY": "Humidity",
+    "BAROMETER": "Barometer",
+    "TEMPERATURE": "Temperature",
+    "LIGHT": "Light"
+  },
+  "commands": {
+    "Manual mode": "Switch to Manual",
+    "AUTO mode": "Switch to Auto",
+    "Switch ON": "Switch On",
+    "Switch OFF": "Switch Off",
+    "Turn ON": "Turn On",
+    "Turn OFF": "Turn Off"
   }
 }

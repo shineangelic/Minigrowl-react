@@ -137,7 +137,9 @@ export default function MinigrowlActuator(props) {
         </CardActions>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
-            <Typography paragraph>Modalità: {att.mode == MODE_AUTO ? 'Auto' : 'Manual'}</Typography>
+            <Typography paragraph>
+              {t('devices:mode')}: {att.mode == MODE_AUTO ? 'Auto' : 'Manual'}
+            </Typography>
             <Typography paragraph>{t('devices:autodesc')}</Typography>
             <Typography color="textSecondary" className={classes.depositContext}></Typography>
             {att.cmds.map((comando) => (
@@ -158,7 +160,7 @@ export default function MinigrowlActuator(props) {
                     {comando.val == MODE_AUTO ? <FlashAuto /> : ''}
                     {comando.val == 1 ? <ToggleOn /> : ''}
                     {comando.val == 0 ? <ToggleOff /> : ''}
-                    {comando.name}
+                    {t('commands:' + comando.name)}
                   </Button>
                 </CardActions>
               </Box>

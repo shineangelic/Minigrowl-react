@@ -13,6 +13,7 @@
   },
   "devices": {
     "devices": "Dispositivi",
+    "mode": "Modalità",
     "FAN": "Ventilatore",
     "OUTTAKE": "Estrattore",
     "LIGHT": "Luci",
@@ -20,8 +21,23 @@
     "HUMIDIFIER": "Umidificatore",
     "autodesc": "La modalita` AUTO segue la programmazione definita sulla scheda e disabilita i comandi manuali"
   },
-  "sensor": {
+  "sensors": {
     "sensors": "Sensori",
-    "sensor": "Sensore"
+    "sensor": "Sensore",
+    "error": "Errori",
+    "measure": "Misura",
+    "lastseen": "Ultimo contatto",
+    "HUMIDITY": "Umidità",
+    "BAROMETER": "Barometro",
+    "TEMPERATURE": "Temperatura",
+    "LIGHT": "Luce"
+  },
+  "commands": {
+    "Manual mode": "Passa a Manuale",
+    "AUTO mode": "Passa a Auto",
+    "Switch ON": "Accendi",
+    "Switch OFF": "Spegni",
+    "Turn ON": "Accendi",
+    "Turn OFF": "Spegni"
   }
 }
