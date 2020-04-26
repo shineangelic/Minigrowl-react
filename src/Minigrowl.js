@@ -59,7 +59,7 @@ class Minigrowl extends React.Component {
     return list;
   };
   webSock() {
-    console.log('Component did mount');
+    console.log('OPENING WEBSOCKET');
     this.client = new Client();
 
     this.client.configure({
@@ -97,7 +97,7 @@ class Minigrowl extends React.Component {
       },*/
     });
 
-    // this.client.activate();
+    this.client.activate();
   }
   askSensors() {
     //sensors = [];

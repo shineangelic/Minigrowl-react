@@ -9,7 +9,6 @@ import Typography from '@material-ui/core/Typography';
 import MinigrowlActuator from './MinigrowlActuator';
 import SensorsTab from './SensorsTab';
 import SensorsChart from './SensorChart';
-import SensorsChartHistory from './SensorChartHistory';
 import FormControl from '@material-ui/core/FormControl';
 
 import './Minigrowl.css';
@@ -147,11 +146,12 @@ export default function MinigrowlDashboard(props) {
 
         <SensorsChart t={t} value={props} chartSensor={props.value.chartSensor} chartData={props.value.chartData} />
 
-        <SensorsChartHistory
+        <SensorsChart
           t={t}
           value={props}
-          chartHistSensor={props.value.chartHistSensor}
-          chartHistData={props.value.chartHistData}
+          hist={true}
+          chartSensor={props.value.chartHistSensor}
+          chartData={props.value.chartHistData}
         />
       </Grid>
       <Box pt={4}>

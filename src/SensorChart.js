@@ -31,13 +31,16 @@ export default function SensorChart(props) {
   const chartSensor = props.chartSensor;
   const sensors = props.value.value.sensors;
 
+  const histMode = props.hist;
+
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   const { t } = props;
   //console.log(Object.values(datac));
   const handleChangeChart = (event) => {
     // async chart data req
-    props.value.onAskChartData(event.target.value);
+    if (histMode) props.value.onAskHistoryData(event.target.value);
+    else props.value.onAskChartData(event.target.value);
   };
 
   return (
@@ -48,7 +51,7 @@ export default function SensorChart(props) {
         justify="space-between" // Add it here :)
       >
         <Grid item>
-          <Typography variant="h3">{t('common:charts')}</Typography>
+          <Typography variant="h3">{histMode ? t('common:history') : t('common:charts')}</Typography>
         </Grid>
         <Grid item>
           <FormControl className={classes.formControl}>

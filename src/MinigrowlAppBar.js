@@ -20,7 +20,7 @@ export default function MinigrowlAppBar(props) {
           }}
           style={{ paddingRight: '10px', fontSize: '25px', cursor: 'pointer' }}
         >
-          <span>🇮🇹</span>
+          <span role="img">🇮🇹</span>
         </a>
         <a
           onClick={() => {
@@ -28,7 +28,7 @@ export default function MinigrowlAppBar(props) {
           }}
           style={{ paddingRight: '10px', fontSize: '25px', cursor: 'pointer' }}
         >
-          <span>🇬🇧</span>
+          <span role="img">🇬🇧</span>
         </a>
         <Typography variant="body2" style={{ flexGrow: 0 }}>
           {props.value.isOnline ? 'Online' : 'Offline'}
