@@ -25,6 +25,7 @@ class Minigrowl extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isWebSocketEnabled: true,
       isOnline: false,
       sensors: [],
       actuators: [],
@@ -59,15 +60,13 @@ class Minigrowl extends React.Component {
     return list;
   };
   webSock() {
-    console.log('OPENING WEBSOCKET');
     this.client = new Client();
 
     this.client.configure({
       brokerURL: `wss://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/minigrowl-ws/websocket`,
       onConnect: () => {
         console.log('WEBSOCKET CONNECTED');
-
-        this.client.subscribe('/topic/sensors', (message) => {
+        var subsc1 = this.client.subscribe('/topic/sensors', (message) => {
           const sens = message.body;
           console.log('SENSORI ASYNC RECV' + sens);
           const slist = this.onUpdateSensor(JSON.parse(sens));
@@ -77,7 +76,7 @@ class Minigrowl extends React.Component {
             sensors: slist,
           });
         });
-        this.client.subscribe('/topic/actuators', (message) => {
+        var subsc2 = this.client.subscribe('/topic/actuators', (message) => {
           const sens = message.body;
           console.log('ACT ASYNC RECV' + sens);
           const alist = this.onUpdateActuator(JSON.parse(sens));
@@ -96,8 +95,21 @@ class Minigrowl extends React.Component {
         console.log(new Date(), str);
       },*/
     });
-
-    this.client.activate();
+    if (this.state.isWebSocketEnabled) {
+      console.log('OPENING WEBSOCKET');
+      this.client.activate();
+    } else {
+      console.log('DEACTIVATING WEBSOCKET');
+      this.client.deactivate();
+    }
+  }
+  //called from menu
+  toggleWebSocket() {
+    const tf = !this.state.isWebSocketEnabled;
+    this.setState({ isWebSocketEnabled: tf }, () => {
+      console.log('TOGGLE WEBSOCKETS:' + this.state.isWebSocketEnabled);
+      this.webSock();
+    });
   }
   askSensors() {
     //sensors = [];
@@ -189,7 +201,7 @@ class Minigrowl extends React.Component {
       <ThemeProvider theme={theme}>
         <CssBaseline />
 
-        <MinigrowlAppBar value={this.state} />
+        <MinigrowlAppBar value={this.state} onToggleWebSocket={() => this.toggleWebSocket()} />
 
         <div className="App">
           <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />

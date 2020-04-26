@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import { useTheme } from '@material-ui/core/styles';
-import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer, Tooltip, CartesianGrid } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer, Tooltip, CartesianGrid, Brush } from 'recharts';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -96,16 +96,18 @@ export default function SensorChart(props) {
                 </Label>
               </YAxis>
 
-              <Line type="monotone" dataKey="min" stroke={theme.palette.primary.dark} />
-              <Line type="monotone" dataKey="max" stroke={theme.palette.error.light} />
+              <Line type="monotone" dataKey="min" stroke={theme.palette.primary.light} />
+              <Line type="monotone" dataKey="max" stroke={theme.palette.secondary.light} />
               <Line type="monotone" dataKey="value" stroke={theme.palette.primary.contrastText} />
               <Tooltip
-                labelStyle={{ color: theme.palette.primary.dark }}
-                itemStyle={{ color: theme.palette.primary.dark }}
+                labelStyle={{ color: theme.palette.primary.dark, fontWeight: 'bold' }}
+                itemStyle={{ color: theme.palette.info.dark }}
                 labelFormatter={function (value) {
-                  return `Ore: ${value}`;
+                  if (histMode) return `Data: ${value}`;
+                  else return `Ore: ${value}`;
                 }}
               />
+              {histMode ? <Brush dataKey="id" height={30} stroke={theme.palette.secondary.light} /> : ''}
             </LineChart>
           </ResponsiveContainer>
         </React.Fragment>
