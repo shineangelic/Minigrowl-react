@@ -30,6 +30,8 @@ class Minigrowl extends React.Component {
       actuators: [],
       chartData: [],
       chartSensor: {}, //selected chart
+      chartHistData: [],
+      chartHistSensor: {}, //selected chart history
     };
   }
   onUpdateSensor = (updatedSensor) => {
@@ -140,6 +142,21 @@ class Minigrowl extends React.Component {
         this.setState({ isOnline: false });
       });
   }
+  askChartDataHistory(sensor) {
+    axios
+      .get(
+        `https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v1/sensors/${sensor.id}/historyChart`,
+      )
+      .then((response) => {
+        const chartDatar = response.data;
+        console.log('GOT HISTORY DATA');
+        this.setState({ chartHistData: chartDatar, chartHistSensor: sensor, isOnline: true });
+      })
+      .catch(function (error) {
+        console.log(error);
+        this.setState({ isOnline: false });
+      });
+  }
 
   componentDidMount() {
     this.askSensors();
@@ -176,7 +193,7 @@ class Minigrowl extends React.Component {
 
         <div className="App">
           <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-          <img src={logo} className="App-logo" alt="logo" />
+          <img src={logo} className="App-logo" alt="Minigrowl logo" />
           <Typography variant="h6">
             Gestione <code>{t('common:appName')}</code>
           </Typography>
@@ -193,6 +210,7 @@ class Minigrowl extends React.Component {
             t={t}
             value={this.state}
             onAskChartData={(aboutWhichSensor) => this.askChartData(aboutWhichSensor)}
+            onAskHistoryData={(aboutWhichSensor) => this.askChartDataHistory(aboutWhichSensor)}
             onCommand={(whichCommand) => this.sendCommand(whichCommand)}
             onAskAllSensors={() => this.askSensors()}
             onAskAllActuators={() => this.askActuators()}

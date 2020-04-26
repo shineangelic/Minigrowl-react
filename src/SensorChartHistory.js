@@ -23,23 +23,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SensorChart(props) {
+export default function SensorChartHistory(props) {
   const theme = useTheme();
   const classes = useStyles();
-
-  const dataSerie = props.chartData;
-  const chartSensor = props.chartSensor;
+  const dataSerie = props.chartHistData;
+  const chartHistSensor = props.chartHistSensor;
   const sensors = props.value.value.sensors;
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-
   const { t } = props;
-  //console.log(Object.values(datac));
-  const handleChangeChart = (event) => {
+  const handleChangeHistChart = (event) => {
     // async chart data req
-    props.value.onAskChartData(event.target.value);
+    props.value.onAskHistoryData(event.target.value);
   };
-
   return (
     <Grid item xs={12}>
       <Grid
@@ -48,7 +44,7 @@ export default function SensorChart(props) {
         justify="space-between" // Add it here :)
       >
         <Grid item>
-          <Typography variant="h3">{t('common:charts')}</Typography>
+          <Typography variant="h3">{t('common:history')}</Typography>
         </Grid>
         <Grid item>
           <FormControl className={classes.formControl}>
@@ -56,8 +52,8 @@ export default function SensorChart(props) {
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              value={chartSensor}
-              onChange={handleChangeChart}
+              value={chartHistSensor}
+              onChange={handleChangeHistChart}
             >
               {sensors.map((sensorchart) => (
                 <MenuItem key={sensorchart.id} value={sensorchart}>
@@ -89,7 +85,7 @@ export default function SensorChart(props) {
 
               <YAxis stroke={theme.palette.text.secondary}>
                 <Label angle={270} position="left" style={{ textAnchor: 'middle', fill: theme.palette.text.primary }}>
-                  {chartSensor.uinit}
+                  {chartHistSensor.uinit}
                 </Label>
               </YAxis>
 
@@ -100,7 +96,7 @@ export default function SensorChart(props) {
                 labelStyle={{ color: theme.palette.primary.dark }}
                 itemStyle={{ color: theme.palette.primary.dark }}
                 labelFormatter={function (value) {
-                  return `Ore: ${value}`;
+                  return `Data: ${value}`;
                 }}
               />
             </LineChart>

@@ -3,6 +3,7 @@
     "appName": "Minigrowl EN",
     "refresh": "Refresh",
     "charts": "Charts",
+    "history": "History",
     "commands": "Commands",
     "on": "Turned ON",
     "off": "Switched OFF"
@@ -38,6 +39,9 @@
     "Switch ON": "Switch On",
     "Switch OFF": "Switch Off",
     "Turn ON": "Turn On",
-    "Turn OFF": "Turn Off"
+    "Turn OFF": "Turn Off",
+    "Set Temperature": "Set Temperature",
+    "Turn ON Hvac": "Turn ON",
+    "Turn OFF Hvac": "Turn OFF"
   }
 }

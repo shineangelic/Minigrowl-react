@@ -1,5 +1,4 @@
 import React from 'react';
-import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
@@ -10,9 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import MinigrowlActuator from './MinigrowlActuator';
 import SensorsTab from './SensorsTab';
 import SensorsChart from './SensorChart';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
+import SensorsChartHistory from './SensorChartHistory';
 import FormControl from '@material-ui/core/FormControl';
 
 import './Minigrowl.css';
@@ -96,14 +93,6 @@ export default function MinigrowlDashboard(props) {
   const sensors = props.value.sensors;
   const actuators = props.value.actuators;
 
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-
-  //console.log(Object.values(datac));
-  const handleChangeChart = (event) => {
-    // async chart data req
-    props.onAskChartData(event.target.value);
-  };
-
   function handleActuatorClick(comman) {
     props.onCommand(comman);
   }
@@ -155,37 +144,15 @@ export default function MinigrowlDashboard(props) {
             <SensorsTab t={t} value={sensors} />
           </Paper>
         </Grid>
-        <Grid item xs={12}>
-          <Grid
-            container
-            spacing={3}
-            justify="space-between" // Add it here :)
-          >
-            <Grid item>
-              <Typography variant="h3">{t('common:charts')}</Typography>
-            </Grid>
-            <Grid item>
-              <FormControl className={classes.formControl}>
-                <InputLabel id="demo-simple-select-label">{t('sensors:sensor')}</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={props.value.chartSensor}
-                  onChange={handleChangeChart}
-                >
-                  {sensors.map((sensorchart) => (
-                    <MenuItem key={sensorchart.id} value={sensorchart}>
-                      {sensorchart.typ} ({sensorchart.id})
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-          </Grid>
-          <Paper className={fixedHeightPaper}>
-            <SensorsChart t={t} value={props} />
-          </Paper>
-        </Grid>
+
+        <SensorsChart t={t} value={props} chartSensor={props.value.chartSensor} chartData={props.value.chartData} />
+
+        <SensorsChartHistory
+          t={t}
+          value={props}
+          chartHistSensor={props.value.chartHistSensor}
+          chartHistData={props.value.chartHistData}
+        />
       </Grid>
       <Box pt={4}>
         <Copyright />

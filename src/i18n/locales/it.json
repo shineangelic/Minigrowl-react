@@ -4,6 +4,7 @@
     "refresh": "Aggiorna",
     "charts": "Grafici",
     "commands": "Comandi",
+    "history": "Storia",
     "on": "Acceso",
     "off": "Spento"
   },
@@ -38,6 +39,9 @@
     "Switch ON": "Accendi",
     "Switch OFF": "Spegni",
     "Turn ON": "Accendi",
-    "Turn OFF": "Spegni"
+    "Turn OFF": "Spegni",
+    "Set Temperature": "Imposta Temp.",
+    "Turn ON Hvac": "Accendi",
+    "Turn OFF Hvac": "Spegni"
   }
 }

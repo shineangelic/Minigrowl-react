@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTheme } from '@material-ui/core/styles';
-import { AppBar, Typography, createMuiTheme, Toolbar } from '@material-ui/core';
+import { AppBar, Typography, Toolbar } from '@material-ui/core';
 import i18n from './i18n/i18n'; // eslint-disable-line no-unused-vars
 import { Eco, Dns } from '@material-ui/icons';
 
@@ -20,7 +20,7 @@ export default function MinigrowlAppBar(props) {
           }}
           style={{ paddingRight: '10px', fontSize: '25px', cursor: 'pointer' }}
         >
-          🇮🇹
+          <span>🇮🇹</span>
         </a>
         <a
           onClick={() => {
@@ -28,7 +28,7 @@ export default function MinigrowlAppBar(props) {
           }}
           style={{ paddingRight: '10px', fontSize: '25px', cursor: 'pointer' }}
         >
-          🇬🇧
+          <span>🇬🇧</span>
         </a>
         <Typography variant="body2" style={{ flexGrow: 0 }}>
           {props.value.isOnline ? 'Online' : 'Offline'}
