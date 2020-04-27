@@ -1,15 +1,13 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import { useTheme } from '@material-ui/core/styles';
 import { AppBar, Typography, Toolbar } from '@material-ui/core';
 import i18n from './i18n/i18n'; // eslint-disable-line no-unused-vars
-import { Eco, Dns, CheckCircleOutline, HighlightOff, ToggleOn, ToggleOff } from '@material-ui/icons';
+import { Eco, CheckCircleOutline, HighlightOff, ToggleOn, ToggleOff } from '@material-ui/icons';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import MenuItem from '@material-ui/core/MenuItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import IconButton from '@material-ui/core/IconButton';

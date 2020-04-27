@@ -55,16 +55,16 @@ export default function SensorChart(props) {
         </Grid>
         <Grid item>
           <FormControl className={classes.formControl}>
-            <InputLabel id="demo-simple-select-label">{t('sensors:sensor')}</InputLabel>
+            <InputLabel id="chart-simple-select">{t('sensors:sensor')}</InputLabel>
             <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
+              labelId="chart-simple-select"
+              id={histMode ? 'chart-simple-select' : 'hist-simple-select'}
               value={chartSensor}
               onChange={handleChangeChart}
             >
               {sensors.map((sensorchart) => (
                 <MenuItem key={sensorchart.id} value={sensorchart}>
-                  {sensorchart.typ} ({sensorchart.id})
+                  {t('sensors:' + sensorchart.typ)} ({sensorchart.id})
                 </MenuItem>
               ))}
             </Select>

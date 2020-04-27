@@ -66,7 +66,7 @@ class Minigrowl extends React.Component {
       brokerURL: `wss://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/minigrowl-ws/websocket`,
       onConnect: () => {
         console.log('WEBSOCKET CONNECTED');
-        var subsc1 = this.client.subscribe('/topic/sensors', (message) => {
+        this.client.subscribe('/topic/sensors', (message) => {
           const sens = message.body;
           console.log('SENSORI ASYNC RECV' + sens);
           const slist = this.onUpdateSensor(JSON.parse(sens));
@@ -76,7 +76,7 @@ class Minigrowl extends React.Component {
             sensors: slist,
           });
         });
-        var subsc2 = this.client.subscribe('/topic/actuators', (message) => {
+        this.client.subscribe('/topic/actuators', (message) => {
           const sens = message.body;
           console.log('ACT ASYNC RECV' + sens);
           const alist = this.onUpdateActuator(JSON.parse(sens));
@@ -166,7 +166,7 @@ class Minigrowl extends React.Component {
       })
       .catch(function (error) {
         console.log(error);
-        this.setState({ isOnline: false });
+        //this.setState({ isOnline: false });
       });
   }
 
