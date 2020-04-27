@@ -118,7 +118,7 @@ export default function MinigrowlAppBar(props) {
           handleMenuClose();
         }}
       >
-        <ListItemText primary="ITA" />
+        <ListItemText primary="ITA" /> 🇮🇹
       </StyledMenuItem>
       <StyledMenuItem
         selected={i18n.language === 'en'}
@@ -127,7 +127,7 @@ export default function MinigrowlAppBar(props) {
           i18n.changeLanguage('en');
         }}
       >
-        <ListItemText primary="ENG" />
+        <ListItemText primary="ENG" /> 🇬🇧
       </StyledMenuItem>
       <StyledMenuItem
         onClick={() => {
