@@ -7,10 +7,22 @@ import Link from '@material-ui/core/Link';
 import { withTranslation } from 'react-i18next';
 import logo from './logo.svg';
 import MinigrowlDashboard from './MinigrowlDashboard';
-import i18n from './i18n/i18n'; // eslint-disable-line no-unused-vars
+import TimeAgo from 'react-timeago';
+import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import MinigrowlAppBar from './MinigrowlAppBar';
+import enStrings from 'react-timeago/lib/language-strings/en';
+import itaStrings from 'react-timeago/lib/language-strings/it';
+import i18n from './i18n/i18n';
 import './Minigrowl.css';
 require('dotenv').config({ path: '/' });
+
+/* MyFirst react Class. Don't blast me
+04/2020 coronavirus past-time
+
+@author shine@angelic.it
+*/
+const itaFormat = buildFormatter(itaStrings);
+const engFormat = buildFormatter(enStrings);
 
 const theme = createMuiTheme({
   palette: {
@@ -33,6 +45,7 @@ class Minigrowl extends React.Component {
       chartSensor: {}, //selected chart
       chartHistData: [],
       chartHistSensor: {}, //selected chart history
+      lastESPContact: new Date(),
     };
   }
   onUpdateSensor = (updatedSensor) => {
@@ -125,6 +138,8 @@ class Minigrowl extends React.Component {
         //this.setState({ isOnline: false });
         console.log(error);
       });
+    //also forward the request to ESP to speed it up
+    this.issueFullRefresh();
   }
   askActuators() {
     axios
@@ -134,6 +149,41 @@ class Minigrowl extends React.Component {
         console.log('Received all ACTUATORS: ');
         console.log(actuators);
         this.setState({ actuators, isOnline: true });
+      })
+      .catch(function (error) {
+        //this.setState({ isOnline: false });
+        console.log(error);
+      });
+    //also forward the request to ESP to speed it up
+    this.issueFullRefresh();
+  }
+  askLastContact() {
+    axios
+      .get(`https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v1/lastContact`)
+      .then((response) => {
+        const tDate = response.data;
+        console.log('Received LAST CONTACT: ');
+        console.log(tDate);
+        this.setState({ lastESPContact: tDate });
+      })
+      .catch(function (error) {
+        //this.setState({ isOnline: false });
+        console.log(error);
+      });
+  }
+  issueFullRefresh() {
+    axios
+      .put(
+        `https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v1/commands/fullRefresh`,
+        '',
+        {
+          headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        },
+      )
+      .then((response) => {
+        const cnt = response.data;
+        console.log('Issued full async refresh: ');
+        console.log('Server commands queue size: ' + cnt);
       })
       .catch(function (error) {
         //this.setState({ isOnline: false });
@@ -174,6 +224,7 @@ class Minigrowl extends React.Component {
     this.askSensors();
     this.askActuators();
     this.webSock();
+    this.askLastContact();
   }
 
   sendCommand(command) {
@@ -217,7 +268,10 @@ class Minigrowl extends React.Component {
           >
             Minigrowl: Opensource growroom controller
           </Link>
-
+          <Typography>
+            {' '}
+            <TimeAgo formatter={i18n.language === 'it' ? itaFormat : engFormat} date={this.state.lastESPContact} />{' '}
+          </Typography>
           <MinigrowlDashboard
             t={t}
             value={this.state}

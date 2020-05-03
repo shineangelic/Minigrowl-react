@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
 export default function SensorsTab(props) {
   const classes = useStyles();
   const attuatori = props.value;
+  const lastT = props.lastESPContact;
   const t = props.t;
   return (
     <React.Fragment>
@@ -28,9 +29,9 @@ export default function SensorsTab(props) {
           <TableHead>
             <TableRow>
               <TableCell>ID</TableCell>
-              <TableCell>Tipo</TableCell>
+              <TableCell>{t('sensors:type')}</TableCell>
               <TableCell>{t('sensors:measure')}</TableCell>
-              <TableCell>{t('sensors:lastseen')}</TableCell>
+              <TableCell>{t('common:lastseen')}</TableCell>
               <TableCell>{t('sensors:error')}</TableCell>
             </TableRow>
           </TableHead>
@@ -50,6 +51,9 @@ export default function SensorsTab(props) {
           </TableBody>
         </Table>
       </TableContainer>
+      <div className={classes.seeMore}>
+        {t('common:lastseen')} {lastT}
+      </div>
     </React.Fragment>
   );
 }

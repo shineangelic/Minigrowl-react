@@ -4,7 +4,7 @@ import Menu from '@material-ui/core/Menu';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import { useTheme } from '@material-ui/core/styles';
 import { AppBar, Typography, Toolbar } from '@material-ui/core';
-import i18n from './i18n/i18n'; // eslint-disable-line no-unused-vars
+import i18n from './i18n/i18n';
 import { Eco, CheckCircleOutline, HighlightOff, ToggleOn, ToggleOff } from '@material-ui/icons';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import MenuItem from '@material-ui/core/MenuItem';

@@ -6,7 +6,8 @@
     "history": "History",
     "commands": "Commands",
     "on": "Turned ON",
-    "off": "Switched OFF"
+    "off": "Switched OFF",
+    "lastseen": "Last seen"
   },
   "languages": {
     "it": "Italian",
@@ -27,7 +28,7 @@
     "sensor": "Sensor",
     "error": "Errors",
     "measure": "Measure",
-    "lastseen": "Last seen",
+    "type": "Type",
     "HUMIDITY": "Humidity",
     "BAROMETER": "Barometer",
     "TEMPERATURE": "Temperature",

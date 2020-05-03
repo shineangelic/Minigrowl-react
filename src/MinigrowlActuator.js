@@ -27,16 +27,18 @@ import {
 import { Alert } from '@material-ui/lab';
 import { Box } from '@material-ui/core';
 import TimeAgo from 'react-timeago';
-import lime from '@material-ui/core/colors/lime';
-import frenchStrings from 'react-timeago/lib/language-strings/it';
+import enStrings from 'react-timeago/lib/language-strings/en';
+import itaStrings from 'react-timeago/lib/language-strings/it';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import { useTheme } from '@material-ui/core/styles';
+import i18n from './i18n/i18n';
 /* MyFirst react Class. Don't blast me
 04/2020 coronavirus past-time
 
 @author shine@angelic.it
 */
-const formatter = buildFormatter(frenchStrings);
+const itaFormat = buildFormatter(itaStrings);
+const engFormat = buildFormatter(enStrings);
 
 const MODE_MANUAL = -1;
 const MODE_AUTO = -2;
@@ -68,61 +70,63 @@ export default function MinigrowlActuator(props) {
   const classes = useStyles();
   const theme = useTheme();
   const t = props.t;
-  const att = props.value;
+  const actuator = props.value;
   //does not work
-  const sortedCmds = att.cmds.sort((a, b) => a.val > b.val);
+  const sortedCmds = actuator.cmds.sort((a, b) => a.name > b.name);
   //const dateT = Date(att.timeStamp);
   const [expanded, setExpanded] = React.useState(false);
 
   function isComandEnabled(comando) {
     if (comando.val == MODE_MANUAL || comando.val == MODE_AUTO) {
-      return att.mode == comando.val; //mode command
+      return actuator.mode == comando.val; //mode command
     } else {
       //real command
-      return att.val == comando.val || att.mode == MODE_AUTO;
+      return actuator.val == comando.val || actuator.mode == MODE_AUTO;
     }
   }
 
   function getDeviceIcon(device) {
-    if (device.typ === 'FAN') return <Toys style={{ color: att.val == 1 ? theme.palette.success.light : '' }}></Toys>;
+    if (device.typ === 'FAN') return <Toys style={{ color: actuator.val == 1 ? theme.palette.success.light : '' }}></Toys>;
     if (device.typ === 'OUTTAKE')
-      return <Launch style={{ color: att.val == 1 ? theme.palette.success.light : '' }}></Launch>;
+      return <Launch style={{ color: actuator.val == 1 ? theme.palette.success.light : '' }}></Launch>;
     if (device.typ === 'LIGHT')
-      return <WbIncandescent style={{ color: att.val == 1 ? theme.palette.success.light : '' }}></WbIncandescent>;
+      return <WbIncandescent style={{ color: actuator.val == 1 ? theme.palette.success.light : '' }}></WbIncandescent>;
     if (device.typ === 'HVAC')
-      return <Whatshot style={{ color: att.val == 1 ? theme.palette.success.light : '' }}></Whatshot>;
+      return <Whatshot style={{ color: actuator.val == 1 ? theme.palette.success.light : '' }}></Whatshot>;
     if (device.typ === 'HUMIDIFIER')
-      return <LocalDrink style={{ color: att.val == 1 ? theme.palette.success.light : '' }}></LocalDrink>;
+      return <LocalDrink style={{ color: actuator.val == 1 ? theme.palette.success.light : '' }}></LocalDrink>;
     //default
-    return <Share color={att.val == 1 ? 'primary' : 'secondary'}></Share>;
+    return <Share color={actuator.val == 1 ? 'primary' : 'secondary'}></Share>;
   }
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
-  const imageStr = '/static/' + att.typ + '.jpg';
-  const titStr = t('devices:' + att.typ) + ' (on PIN ' + att.id + ')';
+  const imageStr = '/static/' + actuator.typ + '.jpg';
+  const titStr = t('devices:' + actuator.typ) + ' (on PIN ' + actuator.id + ')';
   return (
     <React.Fragment>
       <Card className={classes.root}>
         <CardHeader
           avatar={
             <Avatar img={imageStr} alt={titStr} className={classes.avatar}>
-              {getDeviceIcon(att)}
+              {getDeviceIcon(actuator)}
             </Avatar>
           }
           title={titStr}
-          subheader={<TimeAgo formatter={formatter} date={new Date(att.timeStamp)} />}
+          subheader={
+            <TimeAgo formatter={i18n.language === 'it' ? itaFormat : engFormat} date={new Date(actuator.timeStamp)} />
+          }
         />
 
         <CardMedia className={classes.media} image={imageStr} title="Device" />
-        {att.type}
+        {actuator.type}
         <CardContent>
-          <Typography style={{ color: att.val != 0 ? theme.palette.success.light : '' }} variant="h4" component="p">
-            {att.val == 1 ? t('common:on') : t('common:off')}
+          <Typography style={{ color: actuator.val != 0 ? theme.palette.success.light : '' }} variant="h4" component="p">
+            {actuator.val == 1 ? t('common:on') : t('common:off')}
           </Typography>
-          {att.err && <Alert severity="error">Dispositivo in errore!</Alert>}
+          {actuator.err && <Alert severity="error">Dispositivo in errore!</Alert>}
         </CardContent>
         <CardActions disableSpacing>
           {t('common:commands')}
@@ -140,7 +144,7 @@ export default function MinigrowlActuator(props) {
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
             <Typography paragraph>
-              {t('devices:mode')}: {att.mode == MODE_AUTO ? 'Auto' : 'Manual'}
+              {t('devices:mode')}: {actuator.mode == MODE_AUTO ? 'Auto' : 'Manual'}
             </Typography>
             <Typography paragraph>{t('devices:autodesc')}</Typography>
             <Typography color="textSecondary" className={classes.depositContext}></Typography>
@@ -171,11 +175,7 @@ export default function MinigrowlActuator(props) {
 
             <Typography paragraph>
               Ultimo contatto{' '}
-              <TimeAgo
-                formatter={formatter}
-                date={new Date(att.timeStamp)}
-                render={({ error, value }) => <span>{value}</span>}
-              />
+              <TimeAgo formatter={i18n.language === 'it' ? itaFormat : engFormat} date={new Date(actuator.timeStamp)} />
             </Typography>
           </CardContent>
         </Collapse>

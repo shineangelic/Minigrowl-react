@@ -6,7 +6,8 @@
     "commands": "Comandi",
     "history": "Storia",
     "on": "Acceso",
-    "off": "Spento"
+    "off": "Spento",
+    "lastseen": "Ultimo contatto"
   },
   "languages": {
     "it": "Italian",
@@ -27,7 +28,7 @@
     "sensor": "Sensore",
     "error": "Errori",
     "measure": "Misura",
-    "lastseen": "Ultimo contatto",
+    "type": "Tipo",
     "HUMIDITY": "Umidità",
     "BAROMETER": "Barometro",
     "TEMPERATURE": "Temperatura",

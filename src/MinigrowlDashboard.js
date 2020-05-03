@@ -152,6 +152,7 @@ export default function MinigrowlDashboard(props) {
           hist={true}
           chartSensor={props.value.chartHistSensor}
           chartData={props.value.chartHistData}
+          lastESPContact={props.value.lastESPContact}
         />
       </Grid>
       <Box pt={4}>
