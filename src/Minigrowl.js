@@ -46,6 +46,7 @@ class Minigrowl extends React.Component {
       chartHistData: [],
       chartHistSensor: {}, //selected chart history
       lastESPContact: new Date(),
+      actuatorsUptime: [],
     };
   }
   onUpdateSensor = (updatedSensor) => {
@@ -171,6 +172,25 @@ class Minigrowl extends React.Component {
         console.log(error);
       });
   }
+  askActuatorsUptime(dtIn, dtOut) {
+    axios
+      .get(`https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v1/actuators/uptime`, {
+        params: {
+          dataInizio: dtIn,
+          dataFine: dtOut,
+        },
+      })
+      .then((response) => {
+        const uptimeArr = response.data;
+        console.log('Received UPTIME: ');
+        console.log(uptimeArr);
+        this.setState({ actuatorsUptime: uptimeArr });
+      })
+      .catch(function (error) {
+        //this.setState({ isOnline: false });
+        console.log(error);
+      });
+  }
   issueFullRefresh() {
     axios
       .put(
@@ -201,7 +221,7 @@ class Minigrowl extends React.Component {
       })
       .catch(function (error) {
         console.log(error);
-        this.setState({ isOnline: false });
+        //this.setState({ isOnline: false });
       });
   }
   askChartDataHistory(sensor) {
@@ -276,6 +296,7 @@ class Minigrowl extends React.Component {
             t={t}
             value={this.state}
             onAskChartData={(aboutWhichSensor) => this.askChartData(aboutWhichSensor)}
+            onAskChartUptime={(from, to) => this.askActuatorsUptime(from, to)}
             onAskHistoryData={(aboutWhichSensor) => this.askChartDataHistory(aboutWhichSensor)}
             onCommand={(whichCommand) => this.sendCommand(whichCommand)}
             onAskAllSensors={() => this.askSensors()}

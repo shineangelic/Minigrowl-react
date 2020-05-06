@@ -7,7 +7,10 @@
     "commands": "Commands",
     "on": "Turned ON",
     "off": "Switched OFF",
-    "lastseen": "Last seen"
+    "lastseen": "Last seen",
+    "month": "Month",
+    "day": "Day",
+    "week": "Week"
   },
   "languages": {
     "it": "Italian",
@@ -21,7 +24,9 @@
     "LIGHT": "Main Lights",
     "HVAC": "Heating",
     "HUMIDIFIER": "Umidificatore",
-    "autodesc": "AUTO mode follows scheduling defined at board level, thus disabling manual commands."
+    "autodesc": "AUTO mode follows scheduling defined at board level, thus disabling manual commands.",
+    "litfor": "Lit for",
+    "inthelast": "in the last"
   },
   "sensors": {
     "sensors": "Sensors",

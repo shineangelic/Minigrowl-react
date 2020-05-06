@@ -95,6 +95,7 @@ export default function MinigrowlDashboard(props) {
   function handleActuatorClick(comman) {
     props.onCommand(comman);
   }
+
   const { t } = props;
   return (
     <Container maxWidth="lg" className={classes.container}>
@@ -115,10 +116,16 @@ export default function MinigrowlDashboard(props) {
         </Grid>
       </Grid>
       <Grid container spacing={3}>
-        {actuators.map((senso) => (
-          <Grid key={senso.id} item xs={12} md={4} lg={3} sm={6}>
+        {actuators.map((actuator) => (
+          <Grid key={actuator.id} item xs={12} md={4} lg={3} sm={6}>
             <Paper>
-              <MinigrowlActuator t={t} value={senso} onClick={(sens) => handleActuatorClick(sens)} />
+              <MinigrowlActuator
+                onAskUptime={(from, to) => props.onAskChartUptime(from, to)}
+                t={t}
+                uptime={props.value.actuatorsUptime}
+                value={actuator}
+                onClick={(sens) => handleActuatorClick(sens)}
+              />
             </Paper>
           </Grid>
         ))}

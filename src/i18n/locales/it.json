@@ -7,7 +7,11 @@
     "history": "Storia",
     "on": "Acceso",
     "off": "Spento",
-    "lastseen": "Ultimo contatto"
+    "lastseen": "Ultimo contatto",
+    "month": "Mese",
+    "day": "Giorno",
+    "week": "Settimana",
+    "hour": "Ore"
   },
   "languages": {
     "it": "Italian",
@@ -21,7 +25,9 @@
     "LIGHT": "Luci",
     "HVAC": "Riscaldamento",
     "HUMIDIFIER": "Umidificatore",
-    "autodesc": "La modalita` AUTO segue la programmazione definita sulla scheda e disabilita i comandi manuali"
+    "autodesc": "La modalita` AUTO segue la programmazione definita sulla scheda e disabilita i comandi manuali",
+    "litfor": "Acceso per",
+    "inthelast": "Nell'ultimo/a"
   },
   "sensors": {
     "sensors": "Sensori",

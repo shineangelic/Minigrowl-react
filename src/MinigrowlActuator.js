@@ -12,6 +12,7 @@ import Collapse from '@material-ui/core/Collapse';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import * as moment from 'moment';
 import {
   ToggleOff,
   ToggleOn,
@@ -32,6 +33,10 @@ import itaStrings from 'react-timeago/lib/language-strings/it';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import { useTheme } from '@material-ui/core/styles';
 import i18n from './i18n/i18n';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 /* MyFirst react Class. Don't blast me
 04/2020 coronavirus past-time
 
@@ -71,10 +76,18 @@ export default function MinigrowlActuator(props) {
   const theme = useTheme();
   const t = props.t;
   const actuator = props.value;
+  const actuptime = props.uptime;
+  const [updateInterval, setUpdateInterval] = React.useState('week');
+
   //does not work
   const sortedCmds = actuator.cmds.sort((a, b) => a.name > b.name);
   //const dateT = Date(att.timeStamp);
   const [expanded, setExpanded] = React.useState(false);
+
+  const df = new Intl.NumberFormat(i18n.language, {
+    style: 'decimal',
+    maximumSignificantDigits: 2,
+  });
 
   function isComandEnabled(comando) {
     if (comando.val == MODE_MANUAL || comando.val == MODE_AUTO) {
@@ -101,9 +114,69 @@ export default function MinigrowlActuator(props) {
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
+    handleChangeUptimeInterval(updateInterval);
   };
 
+  const handleChangeUptimeInterval = (option) => {
+    setUpdateInterval(option);
+
+    var now = new Date();
+    now.setDate(now.getDate() + 1);
+
+    var oneWeekAgo = new Date();
+    switch (option) {
+      case 'week':
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+      case 'month':
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 30);
+      case 'day':
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 1);
+    }
+
+    console.log('               from: ' + moment(oneWeekAgo).format('YYYY-MM-DD'));
+    console.log('  uptime  : ' + getActuatorUptime(actuator));
+    props.onAskUptime(moment(oneWeekAgo).format('YYYY-MM-DD'), moment(now).format('YYYY-MM-DD'));
+  };
+
+  function getActuatorUptime(act) {
+    var ret = -1;
+    actuptime.forEach((element) => {
+      if (element._id == act.id) {
+        var sec = element.count / 1000;
+        var hour = sec / 60 / 60;
+        ret = hour;
+      }
+    });
+    ret = df.format(ret);
+    return ret;
+  }
+  //divide total hours by interval, to get daily avg
+  function getActuatorUptimeDailyAvg(act) {
+    var ret = -1;
+    actuptime.forEach((element) => {
+      if (element._id == act.id) {
+        var sec = element.count / 1000;
+        var hour = sec / 60 / 60;
+
+        var interval = 0;
+        switch (updateInterval) {
+          case 'week':
+            interval = 7;
+          case 'month':
+            interval = 31;
+          case 'day':
+            interval = 1;
+        }
+
+        var hourPerday = hour / interval;
+        ret = df.format(hourPerday);
+      }
+    });
+    return ret;
+  }
+
   const imageStr = '/static/' + actuator.typ + '.jpg';
+
   const titStr = t('devices:' + actuator.typ) + ' (on PIN ' + actuator.id + ')';
   return (
     <React.Fragment>
@@ -143,40 +216,63 @@ export default function MinigrowlActuator(props) {
         </CardActions>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
-            <Typography paragraph>
+            <Typography variant="h6">
               {t('devices:mode')}: {actuator.mode == MODE_AUTO ? 'Auto' : 'Manual'}
             </Typography>
             <Typography paragraph>{t('devices:autodesc')}</Typography>
             <Typography color="textSecondary" className={classes.depositContext}></Typography>
 
-            {sortedCmds.map((comando) => (
-              <Box key={comando.name} display="flex" alignItems="center" justifyContent="center">
-                <CardActions>
-                  <Button
-                    fullWidth
-                    disabled={isComandEnabled(comando)}
-                    key={comando.name}
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    onClick={() => {
-                      props.onClick(comando);
-                    }}
-                  >
-                    {comando.val == MODE_MANUAL ? <TouchApp /> : ''}
-                    {comando.val == MODE_AUTO ? <FlashAuto /> : ''}
-                    {comando.val == 1 ? <ToggleOn /> : ''}
-                    {comando.val == 0 ? <ToggleOff /> : ''}
-                    {t('commands:' + comando.name)}
-                  </Button>
-                </CardActions>
-              </Box>
-            ))}
-
+            <Box display="flex" alignItems="center" justifyContent="center">
+              <CardActions>
+                <ButtonGroup orientation="vertical" color="primary" aria-label="vertical outlined primary button group">
+                  {sortedCmds.map((comando) => (
+                    <Button
+                      disabled={isComandEnabled(comando)}
+                      key={comando.name}
+                      variant="contained"
+                      color="primary"
+                      className={classes.button}
+                      onClick={() => {
+                        props.onClick(comando);
+                      }}
+                    >
+                      {comando.val == MODE_MANUAL ? <TouchApp /> : ''}
+                      {comando.val == MODE_AUTO ? <FlashAuto /> : ''}
+                      {comando.val == 1 ? <ToggleOn /> : ''}
+                      {comando.val == 0 ? <ToggleOff /> : ''}
+                      {t('commands:' + comando.name)}
+                    </Button>
+                  ))}
+                </ButtonGroup>
+              </CardActions>
+            </Box>
             <Typography paragraph>
               Ultimo contatto{' '}
               <TimeAgo formatter={i18n.language === 'it' ? itaFormat : engFormat} date={new Date(actuator.timeStamp)} />
             </Typography>
+            <FormControl className={classes.formControl}>
+              <Typography paragraph>
+                {t('devices:litfor')} {getActuatorUptime(actuator)} {t('common:hour')} {t('devices:inthelast')}{' '}
+                <Select
+                  labelId="select-uptime-range"
+                  value={updateInterval}
+                  onChange={(val) => {
+                    handleChangeUptimeInterval(val.target.value);
+                  }}
+                >
+                  <MenuItem key="w" value="week">
+                    {t('common:week')}
+                  </MenuItem>
+                  <MenuItem key="d" value="day">
+                    {t('common:day')}
+                  </MenuItem>
+                  <MenuItem key="m" value="month">
+                    {t('common:month')}
+                  </MenuItem>
+                </Select>
+                (In media {getActuatorUptimeDailyAvg(actuator)} ore ogni giorno)
+              </Typography>
+            </FormControl>
           </CardContent>
         </Collapse>
       </Card>
