@@ -159,16 +159,21 @@ export default function MinigrowlActuator(props) {
         var hour = sec / 60 / 60;
 
         var interval = 0;
+
         switch (updateInterval) {
           case 'week':
             interval = 7;
+            break;
           case 'month':
             interval = 31;
+            break;
           case 'day':
             interval = 1;
+            break;
         }
 
         var hourPerday = hour / interval;
+        console.log('ore diviso giorni' + hour + '/ ' + interval);
         ret = df.format(hourPerday);
       }
     });
@@ -176,7 +181,6 @@ export default function MinigrowlActuator(props) {
   }
 
   const imageStr = '/static/' + actuator.typ + '.jpg';
-
   const titStr = t('devices:' + actuator.typ) + ' (on PIN ' + actuator.id + ')';
   return (
     <React.Fragment>
