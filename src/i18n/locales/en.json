@@ -16,6 +16,7 @@
     "it": "Italian",
     "en": "English"
   },
+
   "devices": {
     "devices": "Devices",
     "mode": "Mode",
@@ -26,7 +27,8 @@
     "HUMIDIFIER": "Umidificatore",
     "autodesc": "AUTO mode follows scheduling defined at board level, thus disabling manual commands.",
     "litfor": "Lit for",
-    "inthelast": "in the last"
+    "inthelast": "in the last",
+    "daily": "({{uptime}} hours per day)"
   },
   "sensors": {
     "sensors": "Sensors",

@@ -127,13 +127,16 @@ export default function MinigrowlActuator(props) {
     switch (option) {
       case 'week':
         oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+        break;
       case 'month':
         oneWeekAgo.setDate(oneWeekAgo.getDate() - 30);
+        break;
       case 'day':
         oneWeekAgo.setDate(oneWeekAgo.getDate() - 1);
+        break;
     }
 
-    console.log('               from: ' + moment(oneWeekAgo).format('YYYY-MM-DD'));
+    console.log('  from: ' + moment(oneWeekAgo).format('YYYY-MM-DD'));
     console.log('  uptime  : ' + getActuatorUptime(actuator));
     props.onAskUptime(moment(oneWeekAgo).format('YYYY-MM-DD'), moment(now).format('YYYY-MM-DD'));
   };
@@ -173,7 +176,7 @@ export default function MinigrowlActuator(props) {
         }
 
         var hourPerday = hour / interval;
-        console.log('ore diviso giorni' + hour + '/ ' + interval);
+        //console.log('ore diviso giorni' + hour + '/ ' + interval);
         ret = df.format(hourPerday);
       }
     });
@@ -274,7 +277,7 @@ export default function MinigrowlActuator(props) {
                     {t('common:month')}
                   </MenuItem>
                 </Select>
-                (In media {getActuatorUptimeDailyAvg(actuator)} ore ogni giorno)
+                {updateInterval == 'day' ? '' : t('devices:daily', { uptime: getActuatorUptimeDailyAvg(actuator) })}
               </Typography>
             </FormControl>
           </CardContent>

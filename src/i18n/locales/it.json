@@ -27,7 +27,8 @@
     "HUMIDIFIER": "Umidificatore",
     "autodesc": "La modalita` AUTO segue la programmazione definita sulla scheda e disabilita i comandi manuali",
     "litfor": "Acceso per",
-    "inthelast": "Nell'ultimo/a"
+    "inthelast": "Nell'ultimo/a",
+    "daily": "(In media {{uptime}} ore ogni giorno)"
   },
   "sensors": {
     "sensors": "Sensori",
