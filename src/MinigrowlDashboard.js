@@ -120,7 +120,7 @@ export default function MinigrowlDashboard(props) {
           <Grid key={actuator.id} item xs={12} md={4} lg={3} sm={6}>
             <Paper>
               <MinigrowlActuator
-                onAskUptime={(from, to) => props.onAskChartUptime(from, to)}
+                onAskUptime={(act, from, to) => props.onAskChartUptime(act, from, to)}
                 t={t}
                 uptime={props.value.actuatorsUptime}
                 value={actuator}

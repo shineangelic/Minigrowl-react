@@ -78,11 +78,11 @@ export default function MinigrowlActuator(props) {
   const actuator = props.value;
   const actuptime = props.uptime;
   const [updateInterval, setUpdateInterval] = React.useState('week');
+  const [expanded, setExpanded] = React.useState(false);
 
   //does not work
   const sortedCmds = actuator.cmds.sort((a, b) => a.name > b.name);
   //const dateT = Date(att.timeStamp);
-  const [expanded, setExpanded] = React.useState(false);
 
   const df = new Intl.NumberFormat(i18n.language, {
     style: 'decimal',
@@ -136,9 +136,10 @@ export default function MinigrowlActuator(props) {
         break;
     }
 
-    console.log('  from: ' + moment(oneWeekAgo).format('YYYY-MM-DD'));
-    console.log('  uptime  : ' + getActuatorUptime(actuator));
-    props.onAskUptime(moment(oneWeekAgo).format('YYYY-MM-DD'), moment(now).format('YYYY-MM-DD'));
+    console.log('  from: ' + moment(oneWeekAgo).format('YYYY-MM-DD HH:mm:ss'));
+    console.log('  to: ' + moment(now).format('YYYY-MM-DD HH:mm:ss'));
+    console.log('  uptime for : ' + actuator.id);
+    props.onAskUptime(actuator, moment(oneWeekAgo).format('YYYY-MM-DD HH:mm:ss'), moment(now).format('YYYY-MM-DD HH:mm:ss'));
   };
 
   function getActuatorUptime(act) {

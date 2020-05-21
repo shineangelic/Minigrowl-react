@@ -46,7 +46,7 @@ class Minigrowl extends React.Component {
       chartHistData: [],
       chartHistSensor: {}, //selected chart history
       lastESPContact: new Date(),
-      actuatorsUptime: [],
+      actuatorsUptime: [{ _id: 13 }],
     };
   }
   onUpdateSensor = (updatedSensor) => {
@@ -62,8 +62,13 @@ class Minigrowl extends React.Component {
     });
     return list;
   };
+  onUpdateUptime = (singleUptime) => {
+    const list = this.state.actuatorsUptime.filter((item, j) => singleUptime._id !== item._id);
+    const catted = list.concat(singleUptime);
+    return catted;
+  };
   onUpdateActuator = (updatedActuator) => {
-    console.log('UPDATE ' + updatedActuator.id);
+    //console.log('UPDATE ' + updatedActuator.id);
     const list = this.state.actuators.map((act, j) => {
       if (act.id === updatedActuator.id) {
         return updatedActuator;
@@ -73,6 +78,7 @@ class Minigrowl extends React.Component {
     });
     return list;
   };
+
   webSock() {
     this.client = new Client();
 
@@ -172,19 +178,27 @@ class Minigrowl extends React.Component {
         console.log(error);
       });
   }
-  askActuatorsUptime(dtIn, dtOut) {
+  askActuatorUptime(actuator, dtIn, dtOut) {
     axios
       .get(`https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v1/actuators/uptime`, {
         params: {
           dataInizio: dtIn,
           dataFine: dtOut,
+          actuatorId: actuator.id,
         },
       })
       .then((response) => {
         const uptimeArr = response.data;
         console.log('Received UPTIME: ');
-        console.log(uptimeArr);
-        this.setState({ actuatorsUptime: uptimeArr });
+        console.log(uptimeArr[0]);
+        const slist = this.onUpdateUptime(uptimeArr[0]);
+        console.log('UPTIMES: ');
+        console.log(slist);
+        this.setState({
+          isOnline: true,
+          actuatorsUptime: slist,
+        });
+        // this.setState({ actuatorsUptime: uptimeArr });
       })
       .catch(function (error) {
         //this.setState({ isOnline: false });
@@ -296,7 +310,7 @@ class Minigrowl extends React.Component {
             t={t}
             value={this.state}
             onAskChartData={(aboutWhichSensor) => this.askChartData(aboutWhichSensor)}
-            onAskChartUptime={(from, to) => this.askActuatorsUptime(from, to)}
+            onAskChartUptime={(actuator, from, to) => this.askActuatorUptime(actuator, from, to)}
             onAskHistoryData={(aboutWhichSensor) => this.askChartDataHistory(aboutWhichSensor)}
             onCommand={(whichCommand) => this.sendCommand(whichCommand)}
             onAskAllSensors={() => this.askSensors()}
