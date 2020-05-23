@@ -91,7 +91,6 @@ export default function MinigrowlDashboard(props) {
   const classes = useStyles();
   const sensors = props.value.sensors;
   const actuators = props.value.actuators;
-  const sensorsToggle = props.value.sensorsToggle;
 
   function handleActuatorClick(comman) {
     props.onCommand(comman);
@@ -121,7 +120,7 @@ export default function MinigrowlDashboard(props) {
           <Grid key={actuator.id} item xs={12} md={4} lg={3} sm={6}>
             <Paper>
               <MinigrowlActuator
-                onAskUptime={(act, from, to) => props.onAskChartUptime(act, from, to)}
+                onAskUptime={(act, from, to, timeSpan) => props.onAskUptime(act, from, to, timeSpan)}
                 t={t}
                 uptime={props.value.actuatorsUptime}
                 value={actuator}

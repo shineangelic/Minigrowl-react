@@ -39,7 +39,7 @@ import FormControl from '@material-ui/core/FormControl';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Fade from 'react-reveal/Fade';
 import Flip from 'react-reveal/Flip';
-import Jump from 'react-reveal/Jump';
+import Flash from 'react-reveal/Flash';
 /* MyFirst react Class. Don't blast me
 04/2020 coronavirus past-time
 
@@ -80,7 +80,7 @@ export default function MinigrowlActuator(props) {
   const t = props.t;
   const actuator = props.value;
   const actuptime = props.uptime;
-  const [updateInterval, setUpdateInterval] = React.useState('week');
+  const [updateInterval, setUpdateInterval] = React.useState('day');
   const [expanded, setExpanded] = React.useState(false);
 
   //does not work
@@ -117,7 +117,8 @@ export default function MinigrowlActuator(props) {
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
-    handleChangeUptimeInterval(updateInterval);
+
+    if (!expanded) handleChangeUptimeInterval(updateInterval);
   };
 
   const handleChangeUptimeInterval = (option) => {
@@ -139,16 +140,21 @@ export default function MinigrowlActuator(props) {
         break;
     }
 
-    console.log('  from: ' + moment(oneWeekAgo).format('YYYY-MM-DD HH:mm:ss'));
-    console.log('  to: ' + moment(now).format('YYYY-MM-DD HH:mm:ss'));
-    console.log('  uptime for : ' + actuator.id);
-    props.onAskUptime(actuator, moment(oneWeekAgo).format('YYYY-MM-DD HH:mm:ss'), moment(now).format('YYYY-MM-DD HH:mm:ss'));
+    console.log('  ask uptime from: ' + moment(oneWeekAgo).format('YYYY-MM-DD HH:mm:ss'));
+    console.log('               to: ' + moment(now).format('YYYY-MM-DD HH:mm:ss'));
+    console.log('         timespan: ' + option);
+    props.onAskUptime(
+      actuator,
+      moment(oneWeekAgo).format('YYYY-MM-DD HH:mm:ss'),
+      moment(now).format('YYYY-MM-DD HH:mm:ss'),
+      option,
+    );
   };
 
-  function getActuatorUptime(act) {
+  function getActuatorUptime(act, timespan) {
     var ret = -1;
     actuptime.forEach((element) => {
-      if (element._id == act.id) {
+      if (element._id == act.id && element.timeSpan == timespan) {
         var sec = element.count / 1000;
         var hour = sec / 60 / 60;
         ret = hour;
@@ -200,20 +206,20 @@ export default function MinigrowlActuator(props) {
           }
           title={titStr}
           subheader={
-            <Jump spy={actuator.timeStamp}>
+            <Flash spy={actuator.timeStamp}>
               <TimeAgo formatter={i18n.language === 'it' ? itaFormat : engFormat} date={new Date(actuator.timeStamp)} />
-            </Jump>
+            </Flash>
           }
         />
 
         <CardMedia className={classes.media} image={imageStr} title="Device" />
         {actuator.type}
         <CardContent>
-          <Typography style={{ color: actuator.val != 0 ? theme.palette.success.light : '' }} variant="h4" component="p">
-            <Jump left cascade spy={actuator.val}>
+          <Flip left cascade spy={actuator.val}>
+            <Typography style={{ color: actuator.val != 0 ? theme.palette.success.light : '' }} variant="h4" component="p">
               {actuator.val == 1 ? t('common:on') : t('common:off')}
-            </Jump>
-          </Typography>
+            </Typography>
+          </Flip>
 
           {actuator.err && <Alert severity="error">Dispositivo in errore!</Alert>}
         </CardContent>
@@ -266,35 +272,38 @@ export default function MinigrowlActuator(props) {
               Ultimo contatto{' '}
               <TimeAgo formatter={i18n.language === 'it' ? itaFormat : engFormat} date={new Date(actuator.timeStamp)} />
             </Typography>
-            {getActuatorUptime(actuator) != -1 ? (
-              <Fade>
-                <FormControl className={classes.formControl}>
-                  <Typography paragraph>
-                    {t('devices:litfor')} {getActuatorUptime(actuator)} {t('common:hour')} {t('devices:inthelast')}{' '}
-                    <Select
-                      labelId="select-uptime-range"
-                      value={updateInterval}
-                      onChange={(val) => {
-                        handleChangeUptimeInterval(val.target.value);
-                      }}
-                    >
-                      <MenuItem key="w" value="week">
-                        {t('common:week')}
-                      </MenuItem>
-                      <MenuItem key="d" value="day">
-                        {t('common:day')}
-                      </MenuItem>
-                      <MenuItem key="m" value="month">
-                        {t('common:month')}
-                      </MenuItem>
-                    </Select>
-                    {updateInterval == 'day' ? '' : t('devices:daily', { uptime: getActuatorUptimeDailyAvg(actuator) })}
-                  </Typography>
-                </FormControl>
-              </Fade>
-            ) : (
-              ''
-            )}
+
+            <FormControl className={classes.formControl}>
+              <span>
+                <Typography>
+                  {t('devices:litfor')}{' '}
+                  {getActuatorUptime(actuator, updateInterval) == -1
+                    ? ' ? '
+                    : getActuatorUptime(actuator, updateInterval) + ' '}
+                  {t('common:hour')} {t('devices:inthelast')}{' '}
+                </Typography>
+                <Select
+                  labelId="select-uptime-range"
+                  value={updateInterval}
+                  onChange={(val) => {
+                    handleChangeUptimeInterval(val.target.value);
+                  }}
+                >
+                  <MenuItem key="w" value="week">
+                    {t('common:week')}
+                  </MenuItem>
+                  <MenuItem key="d" value="day">
+                    {t('common:day')}
+                  </MenuItem>
+                  <MenuItem key="m" value="month">
+                    {t('common:month')}
+                  </MenuItem>
+                </Select>
+                {updateInterval == 'day'
+                  ? ''
+                  : t('devices:daily', { uptime: getActuatorUptimeDailyAvg(actuator, updateInterval) })}
+              </span>{' '}
+            </FormControl>
           </CardContent>
         </Collapse>
       </Card>

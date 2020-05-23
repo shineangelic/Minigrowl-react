@@ -60,7 +60,9 @@ export default function SensorsTab(props) {
                 <TableCell>
                   <Flash spy={row.timeStamp}>{new Date(row.timeStamp).toLocaleTimeString()}</Flash>
                 </TableCell>
-                <TableCell>{row.err ? <ErrorOutline color="error"></ErrorOutline> : ''}</TableCell>
+                <TableCell>
+                  <Flash spy={row.timeStamp}>{row.err ? <ErrorOutline color="error"></ErrorOutline> : ''}</Flash>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

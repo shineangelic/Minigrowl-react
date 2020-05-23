@@ -62,14 +62,21 @@ class Minigrowl extends React.Component {
     });
     return list;
   };
-  onUpdateUptime = (singleUptime, act) => {
+  onUpdateUptime = (singleUptime, act, timespan) => {
+    console.log('TIMESPAN: ' + timespan);
+    //PREV
     if (singleUptime) {
-      const list = this.state.actuatorsUptime.filter((item, j) => singleUptime._id !== item._id);
-      const catted = list.concat(singleUptime);
+      //togli quello pertinente
+      const list = this.state.actuatorsUptime.filter(
+        (item, j) => singleUptime._id !== item._id || timespan !== item.timeSpan,
+      );
+      singleUptime.timeSpan = timespan;
+      const catted = list.concat(singleUptime); //rimettilo
       return catted;
     } else {
+      //puo ancora non esserci
       const list = this.state.actuatorsUptime;
-      return list.concat({ _id: act.id, count: 0 });
+      return list.concat({ _id: act.id, count: 0, timeSpan: timespan });
     }
   };
   onUpdateActuator = (updatedActuator) => {
@@ -170,7 +177,7 @@ class Minigrowl extends React.Component {
     //also forward the request to ESP to speed it up
     this.issueFullRefresh();
   }
-  askLastContact() {
+  /*askLastContact() {
     axios
       .get(`https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v1/lastContact`)
       .then((response) => {
@@ -183,8 +190,8 @@ class Minigrowl extends React.Component {
         //this.setState({ isOnline: false });
         console.log(error);
       });
-  }
-  askActuatorUptime(actuat, dtIn, dtOut) {
+  }*/
+  askActuatorUptime(actuat, dtIn, dtOut, timeSpan) {
     axios
       .get(`https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v1/actuators/uptime`, {
         params: {
@@ -197,7 +204,7 @@ class Minigrowl extends React.Component {
         const uptimeArr = response.data;
         console.log('Received UPTIME: ');
         console.log(uptimeArr[0]);
-        const slist = this.onUpdateUptime(uptimeArr[0], actuat);
+        const slist = this.onUpdateUptime(uptimeArr[0], actuat, timeSpan);
         console.log('UPTIMES: ');
         console.log(slist);
         this.setState({
@@ -264,7 +271,10 @@ class Minigrowl extends React.Component {
     this.askSensors();
     this.askActuators();
     this.webSock();
-    this.askLastContact();
+    //this.askLastContact();
+  }
+  componentWillUnmount() {
+    this.client.deactivate();
   }
 
   sendCommand(command) {
@@ -316,7 +326,7 @@ class Minigrowl extends React.Component {
             t={t}
             value={this.state}
             onAskChartData={(aboutWhichSensor) => this.askChartData(aboutWhichSensor)}
-            onAskChartUptime={(actuator, from, to) => this.askActuatorUptime(actuator, from, to)}
+            onAskUptime={(actuator, from, to, timeSpan) => this.askActuatorUptime(actuator, from, to, timeSpan)}
             onAskHistoryData={(aboutWhichSensor) => this.askChartDataHistory(aboutWhichSensor)}
             onCommand={(whichCommand) => this.sendCommand(whichCommand)}
             onAskAllSensors={() => this.askSensors()}
