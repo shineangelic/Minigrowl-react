@@ -91,6 +91,7 @@ export default function MinigrowlDashboard(props) {
   const classes = useStyles();
   const sensors = props.value.sensors;
   const actuators = props.value.actuators;
+  const sensorsToggle = props.value.sensorsToggle;
 
   function handleActuatorClick(comman) {
     props.onCommand(comman);

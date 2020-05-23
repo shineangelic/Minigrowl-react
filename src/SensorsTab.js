@@ -7,6 +7,10 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import { ErrorOutline } from '@material-ui/icons';
 import TableContainer from '@material-ui/core/TableContainer';
+import Reveal from 'react-reveal/Reveal';
+import Flash from 'react-reveal/Flash';
+import { Typography } from '@material-ui/core';
+import { red } from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme) => ({
   seeMore: {
@@ -19,9 +23,10 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SensorsTab(props) {
   const classes = useStyles();
-  const attuatori = props.value;
+  const sensori = props.value;
   const lastT = props.lastESPContact;
   const t = props.t;
+
   return (
     <React.Fragment>
       <TableContainer>
@@ -36,15 +41,25 @@ export default function SensorsTab(props) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {attuatori.map((row) => (
+            {sensori.map((row, i) => (
               <TableRow key={row.id}>
-                <TableCell component="th">{row.id}</TableCell>
+                <TableCell component="th">
+                  <Flash effect={classes.red} spy={row.timeStamp}>
+                    {row.id}
+                  </Flash>
+                </TableCell>
                 <TableCell>{t('sensors:' + row.typ)}</TableCell>
                 <TableCell>
-                  {row.val}
-                  {row.uinit}
+                  <Flash spy={row.timeStamp}>
+                    <Typography>
+                      {row.val}
+                      {row.uinit}
+                    </Typography>
+                  </Flash>
                 </TableCell>
-                <TableCell>{new Date(row.timeStamp).toLocaleTimeString()}</TableCell>
+                <TableCell>
+                  <Flash spy={row.timeStamp}>{new Date(row.timeStamp).toLocaleTimeString()}</Flash>
+                </TableCell>
                 <TableCell>{row.err ? <ErrorOutline color="error"></ErrorOutline> : ''}</TableCell>
               </TableRow>
             ))}

@@ -37,6 +37,9 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
+import Fade from 'react-reveal/Fade';
+import Flip from 'react-reveal/Flip';
+import Jump from 'react-reveal/Jump';
 /* MyFirst react Class. Don't blast me
 04/2020 coronavirus past-time
 
@@ -197,7 +200,9 @@ export default function MinigrowlActuator(props) {
           }
           title={titStr}
           subheader={
-            <TimeAgo formatter={i18n.language === 'it' ? itaFormat : engFormat} date={new Date(actuator.timeStamp)} />
+            <Jump spy={actuator.timeStamp}>
+              <TimeAgo formatter={i18n.language === 'it' ? itaFormat : engFormat} date={new Date(actuator.timeStamp)} />
+            </Jump>
           }
         />
 
@@ -205,8 +210,11 @@ export default function MinigrowlActuator(props) {
         {actuator.type}
         <CardContent>
           <Typography style={{ color: actuator.val != 0 ? theme.palette.success.light : '' }} variant="h4" component="p">
-            {actuator.val == 1 ? t('common:on') : t('common:off')}
+            <Jump left cascade spy={actuator.val}>
+              {actuator.val == 1 ? t('common:on') : t('common:off')}
+            </Jump>
           </Typography>
+
           {actuator.err && <Alert severity="error">Dispositivo in errore!</Alert>}
         </CardContent>
         <CardActions disableSpacing>
@@ -258,29 +266,35 @@ export default function MinigrowlActuator(props) {
               Ultimo contatto{' '}
               <TimeAgo formatter={i18n.language === 'it' ? itaFormat : engFormat} date={new Date(actuator.timeStamp)} />
             </Typography>
-            <FormControl className={classes.formControl}>
-              <Typography paragraph>
-                {t('devices:litfor')} {getActuatorUptime(actuator)} {t('common:hour')} {t('devices:inthelast')}{' '}
-                <Select
-                  labelId="select-uptime-range"
-                  value={updateInterval}
-                  onChange={(val) => {
-                    handleChangeUptimeInterval(val.target.value);
-                  }}
-                >
-                  <MenuItem key="w" value="week">
-                    {t('common:week')}
-                  </MenuItem>
-                  <MenuItem key="d" value="day">
-                    {t('common:day')}
-                  </MenuItem>
-                  <MenuItem key="m" value="month">
-                    {t('common:month')}
-                  </MenuItem>
-                </Select>
-                {updateInterval == 'day' ? '' : t('devices:daily', { uptime: getActuatorUptimeDailyAvg(actuator) })}
-              </Typography>
-            </FormControl>
+            {getActuatorUptime(actuator) != -1 ? (
+              <Fade>
+                <FormControl className={classes.formControl}>
+                  <Typography paragraph>
+                    {t('devices:litfor')} {getActuatorUptime(actuator)} {t('common:hour')} {t('devices:inthelast')}{' '}
+                    <Select
+                      labelId="select-uptime-range"
+                      value={updateInterval}
+                      onChange={(val) => {
+                        handleChangeUptimeInterval(val.target.value);
+                      }}
+                    >
+                      <MenuItem key="w" value="week">
+                        {t('common:week')}
+                      </MenuItem>
+                      <MenuItem key="d" value="day">
+                        {t('common:day')}
+                      </MenuItem>
+                      <MenuItem key="m" value="month">
+                        {t('common:month')}
+                      </MenuItem>
+                    </Select>
+                    {updateInterval == 'day' ? '' : t('devices:daily', { uptime: getActuatorUptimeDailyAvg(actuator) })}
+                  </Typography>
+                </FormControl>
+              </Fade>
+            ) : (
+              ''
+            )}
           </CardContent>
         </Collapse>
       </Card>

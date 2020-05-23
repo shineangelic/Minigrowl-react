@@ -46,7 +46,7 @@ class Minigrowl extends React.Component {
       chartHistData: [],
       chartHistSensor: {}, //selected chart history
       lastESPContact: new Date(),
-      actuatorsUptime: [{ _id: 13 }],
+      actuatorsUptime: [{}],
     };
   }
   onUpdateSensor = (updatedSensor) => {
@@ -62,10 +62,15 @@ class Minigrowl extends React.Component {
     });
     return list;
   };
-  onUpdateUptime = (singleUptime) => {
-    const list = this.state.actuatorsUptime.filter((item, j) => singleUptime._id !== item._id);
-    const catted = list.concat(singleUptime);
-    return catted;
+  onUpdateUptime = (singleUptime, act) => {
+    if (singleUptime) {
+      const list = this.state.actuatorsUptime.filter((item, j) => singleUptime._id !== item._id);
+      const catted = list.concat(singleUptime);
+      return catted;
+    } else {
+      const list = this.state.actuatorsUptime;
+      return list.concat({ _id: act.id, count: 0 });
+    }
   };
   onUpdateActuator = (updatedActuator) => {
     //console.log('UPDATE ' + updatedActuator.id);
@@ -90,6 +95,7 @@ class Minigrowl extends React.Component {
           const sens = message.body;
           console.log('SENSORI ASYNC RECV' + sens);
           const slist = this.onUpdateSensor(JSON.parse(sens));
+
           ///ieeee aggiorno solo quello ciusto
           this.setState({
             isOnline: true,
@@ -178,20 +184,20 @@ class Minigrowl extends React.Component {
         console.log(error);
       });
   }
-  askActuatorUptime(actuator, dtIn, dtOut) {
+  askActuatorUptime(actuat, dtIn, dtOut) {
     axios
       .get(`https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v1/actuators/uptime`, {
         params: {
           dataInizio: dtIn,
           dataFine: dtOut,
-          actuatorId: actuator.id,
+          actuatorId: actuat.id,
         },
       })
       .then((response) => {
         const uptimeArr = response.data;
         console.log('Received UPTIME: ');
         console.log(uptimeArr[0]);
-        const slist = this.onUpdateUptime(uptimeArr[0]);
+        const slist = this.onUpdateUptime(uptimeArr[0], actuat);
         console.log('UPTIMES: ');
         console.log(slist);
         this.setState({
