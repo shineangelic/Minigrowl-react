@@ -1,0 +1,56 @@
+{
+  "common": {
+    "appName": "Minigrowl RU",
+    "refresh": "Обновить",
+    "charts": "График за день",
+    "history": "История",
+    "commands": "Команды",
+    "on": "Включено",
+    "off": "Выключено",
+    "lastseen": "Последнее просмотренное",
+    "month": "Месяц",
+    "day": "День",
+    "week": "Неделя"
+  },
+  "languages": {
+    "ru": "Русский",
+    "it": "Italian",
+    "en": "English"
+  },
+
+  "devices": {
+    "devices": "Устройства",
+    "mode": "Режим",
+    "FAN": "Внутренний Вентилятор",
+    "OUTTAKE": "Вентиляция",
+    "LIGHT": "Основное Освещение",
+    "HVAC": "Подогрев",
+    "HUMIDIFIER": "Увлажнитель Воздуха",
+    "autodesc": "Режим АВТО позволяет отслеживать графики, отключает ручное управление",
+    "litfor": "Включено в течение",
+    "inthelast": "за последние",
+    "daily": "({{uptime}} часов в день)"
+  },
+  "sensors": {
+    "sensors": "Сенсоры",
+    "sensor": "Сенсор",
+    "error": "Ошибки",
+    "measure": "Мера",
+    "type": "Тип",
+    "HUMIDITY": "Влажность",
+    "BAROMETER": "Барометр",
+    "TEMPERATURE": "Температура",
+    "LIGHT": "Свет"
+  },
+  "commands": {
+    "Manual mode": "Перейти на Ручной Режим",
+    "AUTO mode": "Перейти на Авто",
+    "Switch ON": "Включить",
+    "Switch OFF": "Выключить",
+    "Turn ON": "Включить",
+    "Turn OFF": "Выключить",
+    "Set Temperature": "Установить Температуру",
+    "Turn ON Hvac": "Включить",
+    "Turn OFF Hvac": "Выключить"
+  }
+}

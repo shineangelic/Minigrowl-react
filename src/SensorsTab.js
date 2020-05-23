@@ -24,8 +24,17 @@ const useStyles = makeStyles((theme) => ({
 export default function SensorsTab(props) {
   const classes = useStyles();
   const sensori = props.value;
-  const lastT = props.lastESPContact;
+  const lastT = props.onAsklastC(sensori);
   const t = props.t;
+
+  const df = new Intl.DateTimeFormat(t.language, {
+    year: 'numeric',
+    month: 'long',
+    day: '2-digit',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+  });
 
   return (
     <React.Fragment>
@@ -69,7 +78,7 @@ export default function SensorsTab(props) {
         </Table>
       </TableContainer>
       <div className={classes.seeMore}>
-        {t('common:lastseen')} {lastT}
+        {t('common:lastseen')} {df.format(lastT)}
       </div>
     </React.Fragment>
   );

@@ -12,6 +12,7 @@ import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import MinigrowlAppBar from './MinigrowlAppBar';
 import enStrings from 'react-timeago/lib/language-strings/en';
 import itaStrings from 'react-timeago/lib/language-strings/it';
+import ruStrings from 'react-timeago/lib/language-strings/ru';
 import i18n from './i18n/i18n';
 import './Minigrowl.css';
 require('dotenv').config({ path: '/' });
@@ -23,6 +24,7 @@ require('dotenv').config({ path: '/' });
 */
 const itaFormat = buildFormatter(itaStrings);
 const engFormat = buildFormatter(enStrings);
+const ruFormat = buildFormatter(ruStrings);
 
 const theme = createMuiTheme({
   palette: {
@@ -50,8 +52,6 @@ class Minigrowl extends React.Component {
     };
   }
   onUpdateSensor = (updatedSensor) => {
-    console.log('UPDATE ' + updatedSensor.id);
-
     const list = this.state.sensors.map((sensor, j) => {
       if (sensor.id === updatedSensor.id) {
         //e` lui!
@@ -63,8 +63,6 @@ class Minigrowl extends React.Component {
     return list;
   };
   onUpdateUptime = (singleUptime, act, timespan) => {
-    console.log('TIMESPAN: ' + timespan);
-    //PREV
     if (singleUptime) {
       //togli quello pertinente
       const list = this.state.actuatorsUptime.filter(
@@ -144,6 +142,32 @@ class Minigrowl extends React.Component {
       this.webSock();
     });
   }
+  getLastContact(props) {
+    var m1 = this.getLastSensorsContact(props.actuators);
+    var m2 = this.getLastSensorsContact(props.sensors);
+
+    return m1 > m2 ? m1 : m2;
+  }
+  getLastActuatorsContact(props) {
+    var maxdate = new Date();
+    maxdate.setDate(maxdate.getDate() - 100);
+    props.forEach((act) => {
+      if (new Date(act.timeStamp) > maxdate) {
+        maxdate = new Date(act.timeStamp);
+      }
+    });
+    return maxdate;
+  }
+  getLastSensorsContact(props) {
+    var maxdate = new Date();
+    maxdate.setDate(maxdate.getDate() - 100);
+    props.forEach((act) => {
+      if (new Date(act.timeStamp) > maxdate) {
+        maxdate = new Date(act.timeStamp);
+      }
+    });
+    return maxdate;
+  }
   askSensors() {
     //sensors = [];
     axios
@@ -177,20 +201,7 @@ class Minigrowl extends React.Component {
     //also forward the request to ESP to speed it up
     this.issueFullRefresh();
   }
-  /*askLastContact() {
-    axios
-      .get(`https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v1/lastContact`)
-      .then((response) => {
-        const tDate = response.data;
-        console.log('Received LAST CONTACT: ');
-        console.log(tDate);
-        this.setState({ lastESPContact: tDate });
-      })
-      .catch(function (error) {
-        //this.setState({ isOnline: false });
-        console.log(error);
-      });
-  }*/
+
   askActuatorUptime(actuat, dtIn, dtOut, timeSpan) {
     axios
       .get(`https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v1/actuators/uptime`, {
@@ -320,12 +331,16 @@ class Minigrowl extends React.Component {
           </Link>
           <Typography>
             {' '}
-            <TimeAgo formatter={i18n.language === 'it' ? itaFormat : engFormat} date={this.state.lastESPContact} />{' '}
+            <TimeAgo
+              formatter={i18n.language === 'it' ? itaFormat : engFormat}
+              date={this.getLastContact(this.state)}
+            />{' '}
           </Typography>
           <MinigrowlDashboard
             t={t}
             value={this.state}
             onAskChartData={(aboutWhichSensor) => this.askChartData(aboutWhichSensor)}
+            onAskLastContact={(sensors) => this.getLastSensorsContact(sensors)}
             onAskUptime={(actuator, from, to, timeSpan) => this.askActuatorUptime(actuator, from, to, timeSpan)}
             onAskHistoryData={(aboutWhichSensor) => this.askChartDataHistory(aboutWhichSensor)}
             onCommand={(whichCommand) => this.sendCommand(whichCommand)}

@@ -56,12 +56,7 @@ export default function SensorChart(props) {
         <Grid item>
           <FormControl className={classes.formControl}>
             <InputLabel id="chart-simple-select">{t('sensors:sensor')}</InputLabel>
-            <Select
-              labelId="chart-simple-select"
-              id={histMode ? 'chart-simple-select' : 'hist-simple-select'}
-              value={chartSensor}
-              onChange={handleChangeChart}
-            >
+            <Select labelId="chart-simple-select" value={chartSensor} onChange={handleChangeChart}>
               {sensors.map((sensorchart) => (
                 <MenuItem key={sensorchart.id} value={sensorchart}>
                   {t('sensors:' + sensorchart.typ)} ({sensorchart.id})
@@ -107,7 +102,15 @@ export default function SensorChart(props) {
                   else return `Ore: ${value}`;
                 }}
               />
-              {histMode ? <Brush dataKey="id" height={30} stroke={theme.palette.secondary.light} /> : ''}
+              {histMode ? (
+                <Brush dataKey="id" height={30}>
+                  <LineChart data={dataSerie}>
+                    <Line type="monotone" dataKey="value" />
+                  </LineChart>
+                </Brush>
+              ) : (
+                ''
+              )}
             </LineChart>
           </ResponsiveContainer>
         </React.Fragment>

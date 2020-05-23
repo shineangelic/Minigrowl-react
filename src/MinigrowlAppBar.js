@@ -128,6 +128,15 @@ export default function MinigrowlAppBar(props) {
         <ListItemText primary="ENG" /> 🇬🇧
       </StyledMenuItem>
       <StyledMenuItem
+        selected={i18n.language === 'ru'}
+        onClick={() => {
+          handleMenuClose();
+          i18n.changeLanguage('ru');
+        }}
+      >
+        <ListItemText primary="RUS" /> 🇷🇺
+      </StyledMenuItem>
+      <StyledMenuItem
         onClick={() => {
           //handleMenuClose();
           props.onToggleWebSocket();

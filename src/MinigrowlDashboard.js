@@ -14,22 +14,6 @@ import FormControl from '@material-ui/core/FormControl';
 import './Minigrowl.css';
 import { Button } from '@material-ui/core';
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      <Link color="inherit" href="https://github.com/shineangelic/Minigrowl-ESP-LoRa32-OLED">
-        Made with{' '}
-        <span role="img" aria-label="Love">
-          ❤️
-        </span>{' '}
-        in Bologna by
-      </Link>{' '}
-      Shine - 03/2020
-      {'.'}
-    </Typography>
-  );
-}
-
 const useStyles = makeStyles((theme) => ({
   menuButton: {
     marginRight: 36,
@@ -147,11 +131,9 @@ export default function MinigrowlDashboard(props) {
           </Grid>
 
           <Paper className={classes.paper}>
-            <SensorsTab t={t} value={sensors} />
+            <SensorsTab t={t} value={sensors} onAsklastC={(sensors) => props.onAskLastContact(sensors)} />
           </Paper>
         </Grid>
-
-        <SensorsChart t={t} value={props} chartSensor={props.value.chartSensor} chartData={props.value.chartData} />
 
         <SensorsChart
           t={t}
@@ -159,12 +141,28 @@ export default function MinigrowlDashboard(props) {
           hist={true}
           chartSensor={props.value.chartHistSensor}
           chartData={props.value.chartHistData}
-          lastESPContact={props.value.lastESPContact}
         />
+
+        <SensorsChart t={t} value={props} chartSensor={props.value.chartSensor} chartData={props.value.chartData} />
       </Grid>
       <Box pt={4}>
         <Copyright />
       </Box>
     </Container>
+  );
+}
+function Copyright() {
+  return (
+    <Typography variant="body2" color="textSecondary" align="center">
+      <Link color="inherit" href="https://github.com/shineangelic/Minigrowl-ESP-LoRa32-OLED">
+        Made with{' '}
+        <span role="img" aria-label="Love">
+          ❤️
+        </span>{' '}
+        in Bologna by
+      </Link>{' '}
+      Shine - 03/2020
+      {'.'}
+    </Typography>
   );
 }

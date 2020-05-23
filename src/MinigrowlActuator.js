@@ -30,6 +30,7 @@ import { Box } from '@material-ui/core';
 import TimeAgo from 'react-timeago';
 import enStrings from 'react-timeago/lib/language-strings/en';
 import itaStrings from 'react-timeago/lib/language-strings/it';
+import ruStrings from 'react-timeago/lib/language-strings/ru';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import { useTheme } from '@material-ui/core/styles';
 import i18n from './i18n/i18n';
@@ -37,7 +38,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
-import Fade from 'react-reveal/Fade';
+
 import Flip from 'react-reveal/Flip';
 import Flash from 'react-reveal/Flash';
 /* MyFirst react Class. Don't blast me
@@ -45,11 +46,18 @@ import Flash from 'react-reveal/Flash';
 
 @author shine@angelic.it
 */
-const itaFormat = buildFormatter(itaStrings);
-const engFormat = buildFormatter(enStrings);
+//const itaFormat = buildFormatter(itaStrings);
+//const engFormat = buildFormatter(enStrings);
 
 const MODE_MANUAL = -1;
 const MODE_AUTO = -2;
+
+const getTimeAgoFormatter = (language) => {
+  if (language === 'it') return buildFormatter(itaStrings);
+  if (language === 'en') return buildFormatter(enStrings);
+  if (language === 'ru') return buildFormatter(ruStrings);
+};
+getTimeAgoFormatter(i18n.language);
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -207,7 +215,7 @@ export default function MinigrowlActuator(props) {
           title={titStr}
           subheader={
             <Flash spy={actuator.timeStamp}>
-              <TimeAgo formatter={i18n.language === 'it' ? itaFormat : engFormat} date={new Date(actuator.timeStamp)} />
+              <TimeAgo formatter={getTimeAgoFormatter(i18n.language)} date={new Date(actuator.timeStamp)} />
             </Flash>
           }
         />
@@ -261,16 +269,15 @@ export default function MinigrowlActuator(props) {
                       {comando.val == MODE_MANUAL ? <TouchApp /> : ''}
                       {comando.val == MODE_AUTO ? <FlashAuto /> : ''}
                       {comando.val == 1 ? <ToggleOn /> : ''}
-                      {comando.val == 0 ? <ToggleOff /> : ''}
-                      {t('commands:' + comando.name)}
+                      {comando.val == 0 ? <ToggleOff /> : ''} {t('commands:' + comando.name)}
                     </Button>
                   ))}
                 </ButtonGroup>
               </CardActions>
             </Box>
             <Typography paragraph>
-              Ultimo contatto{' '}
-              <TimeAgo formatter={i18n.language === 'it' ? itaFormat : engFormat} date={new Date(actuator.timeStamp)} />
+              {t('common:lastseen')}{' '}
+              <TimeAgo formatter={getTimeAgoFormatter(i18n.language)} date={new Date(actuator.timeStamp)} />
             </Typography>
 
             <FormControl className={classes.formControl}>

@@ -4,11 +4,17 @@ import { initReactI18next } from 'react-i18next';
 import moment from 'moment';
 import enLocale from './locales/en.json';
 import itLocale from './locales/it.json';
+import ruLocale from './locales/ru.json';
+import TimeAgo from 'react-timeago';
+import enStrings from 'react-timeago/lib/language-strings/en';
+import itaStrings from 'react-timeago/lib/language-strings/it';
+import ruStrings from 'react-timeago/lib/language-strings/ru';
+import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 
 const languageDetector = {
   type: 'languageDetector',
   async: true, // flags below detection to be async
-  detect: async callback => {
+  detect: async (callback) => {
     const userLanguage = 'it';
     if (!_.isNil(userLanguage)) {
       callback(userLanguage);
@@ -28,6 +34,7 @@ i18n
     resources: {
       en: enLocale,
       it: itLocale,
+      ru: ruLocale,
     },
     ns: ['common'],
     defaultNS: 'common',
@@ -42,8 +49,8 @@ i18n
     },
   });
 
-export const isLanguageSupported = language => {
-  if (language === 'en' || language === 'it') return true;
+export const isLanguageSupported = (language) => {
+  if (language === 'en' || language === 'it' || language === 'ru') return true;
 
   return false;
 };
