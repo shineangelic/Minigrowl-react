@@ -43,6 +43,7 @@ export default function SensorsTab(props) {
           <TableHead>
             <TableRow>
               <TableCell>ID</TableCell>
+              <TableCell>PID</TableCell>
               <TableCell>{t('sensors:type')}</TableCell>
               <TableCell>{t('sensors:measure')}</TableCell>
               <TableCell>{t('common:lastseen')}</TableCell>
@@ -52,6 +53,11 @@ export default function SensorsTab(props) {
           <TableBody>
             {sensori.map((row, i) => (
               <TableRow key={row.id}>
+                <TableCell component="th">
+                  <Flash effect={classes.red} spy={row.timeStamp}>
+                    {row.sensorId}
+                  </Flash>
+                </TableCell>
                 <TableCell component="th">
                   <Flash effect={classes.red} spy={row.timeStamp}>
                     {row.id}

@@ -41,6 +41,7 @@ class Minigrowl extends React.Component {
     this.state = {
       isWebSocketEnabled: true,
       isOnline: false,
+      activeBoard: 2,
       sensors: [],
       actuators: [],
       chartData: [],
@@ -93,7 +94,7 @@ class Minigrowl extends React.Component {
     this.client = new Client();
 
     this.client.configure({
-      brokerURL: `wss://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/minigrowl-ws/websocket`,
+      brokerURL: `ws://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/minigrowl-ws/websocket`,
       onConnect: () => {
         console.log('WEBSOCKET CONNECTED');
         this.client.subscribe('/topic/sensors', (message) => {
@@ -171,7 +172,9 @@ class Minigrowl extends React.Component {
   askSensors() {
     //sensors = [];
     axios
-      .get(`https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v1/sensors`)
+      .get(
+        `http://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/sensors/${this.state.activeBoard}`,
+      )
       .then((response) => {
         const sensors = response.data;
         console.log('Received all SENSORS: ');
@@ -183,11 +186,12 @@ class Minigrowl extends React.Component {
         console.log(error);
       });
     //also forward the request to ESP to speed it up
-    this.issueFullRefresh();
   }
   askActuators() {
     axios
-      .get(`https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v1/actuators`)
+      .get(
+        `http://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/actuators/${this.state.activeBoard}`,
+      )
       .then((response) => {
         const actuators = response.data;
         console.log('Received all ACTUATORS: ');
@@ -199,16 +203,15 @@ class Minigrowl extends React.Component {
         console.log(error);
       });
     //also forward the request to ESP to speed it up
-    this.issueFullRefresh();
   }
 
   askActuatorUptime(actuat, dtIn, dtOut, timeSpan) {
     axios
-      .get(`https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v1/actuators/uptime`, {
+      .get(`http://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/actuators/uptime/`, {
         params: {
           dataInizio: dtIn,
           dataFine: dtOut,
-          actuatorId: actuat.id,
+          actuatorId: actuat.actuatorId,
         },
       })
       .then((response) => {
@@ -229,32 +232,15 @@ class Minigrowl extends React.Component {
         console.log(error);
       });
   }
-  issueFullRefresh() {
-    axios
-      .put(
-        `https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v1/commands/fullRefresh`,
-        '',
-        {
-          headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        },
-      )
-      .then((response) => {
-        const cnt = response.data;
-        console.log('Issued full async refresh: ');
-        console.log('Server commands queue size: ' + cnt);
-      })
-      .catch(function (error) {
-        //this.setState({ isOnline: false });
-        console.log(error);
-      });
-  }
+
   askChartData(sensor) {
     axios
       .get(
-        `https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v1/sensors/${sensor.id}/hourChart`,
+        `http://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/sensors/${sensor.sensorId}/hourChart`,
       )
       .then((response) => {
         const chartDatar = response.data;
+        console.log('GOT CHART DATA');
         this.setState({ chartData: chartDatar, chartSensor: sensor, isOnline: true });
       })
       .catch(function (error) {
@@ -265,7 +251,7 @@ class Minigrowl extends React.Component {
   askChartDataHistory(sensor) {
     axios
       .get(
-        `https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v1/sensors/${sensor.id}/historyChart`,
+        `http://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/sensors/${sensor.sensorId}/historyChart`,
       )
       .then((response) => {
         const chartDatar = response.data;
@@ -293,7 +279,7 @@ class Minigrowl extends React.Component {
     console.log(command);
     axios
       .put(
-        `https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v1/commands/queue/add`,
+        `http://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/commands/${this.state.activeBoard}/queue/add`,
         command,
         {
           headers: { 'Content-Type': 'application/json;charset=UTF-8' },

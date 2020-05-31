@@ -76,7 +76,8 @@ export default function MinigrowlDashboard(props) {
   const sensors = props.value.sensors;
   const actuators = props.value.actuators;
 
-  function handleActuatorClick(comman) {
+  function handleActuatorClick(comman, actuator) {
+    comman.tgt = actuator.actuatorId;
     props.onCommand(comman);
   }
 
@@ -108,7 +109,7 @@ export default function MinigrowlDashboard(props) {
                 t={t}
                 uptime={props.value.actuatorsUptime}
                 value={actuator}
-                onClick={(sens) => handleActuatorClick(sens)}
+                onClick={(comando) => handleActuatorClick(comando, actuator)}
               />
             </Paper>
           </Grid>

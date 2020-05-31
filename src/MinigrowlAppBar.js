@@ -166,7 +166,7 @@ export default function MinigrowlAppBar(props) {
           </Typography>
 
           <Typography variant="body2" style={{ flexGrow: 0 }}>
-            {props.value.isOnline ? 'Online' : 'Offline'}
+            board {props.value.activeBoard} - {props.value.isOnline ? 'Online' : 'Offline'}
           </Typography>
 
           {props.value.isOnline ? (
