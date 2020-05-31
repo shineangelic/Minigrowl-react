@@ -5,20 +5,41 @@ import { fade, makeStyles } from '@material-ui/core/styles';
 import { useTheme } from '@material-ui/core/styles';
 import { AppBar, Typography, Toolbar } from '@material-ui/core';
 import i18n from './i18n/i18n';
-import { Eco, CheckCircleOutline, HighlightOff, ToggleOn, ToggleOff } from '@material-ui/icons';
+import { Eco, CheckCircleOutline, HighlightOff, ToggleOn, ToggleOff, DeveloperBoard } from '@material-ui/icons';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import IconButton from '@material-ui/core/IconButton';
 import Fade from '@material-ui/core/Fade';
-
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import Button from '@material-ui/core/Button';
 const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 1,
   },
   menuButton: {
     marginRight: theme.spacing(2),
+  },
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+    margin: 'auto',
+    width: 'fit-content',
+  },
+  formControl: {
+    marginTop: theme.spacing(2),
+    minWidth: 120,
+  },
+  formControlLabel: {
+    marginTop: theme.spacing(1),
   },
   title: {
     display: 'none',
@@ -57,15 +78,29 @@ export default function MinigrowlAppBar(props) {
   const classes = useStyles();
   const menuId = 'minigrowl-menu';
   const [anchorEl, setAnchorEl] = React.useState(null);
-
+  const [open, setOpen] = React.useState(false);
+  const { t } = props;
   const isMenuOpen = Boolean(anchorEl);
 
   const handleOptionsMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleMenuClose = () => {
+  const handleOptionsMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleBoardChange = (event) => {
+    props.onBoardChange(event.target.value);
+  };
+
+  const handleClickOpenChooseBoard = () => {
+    setOpen(true);
+    handleOptionsMenuClose();
+  };
+
+  const handleCloseBoardChooser = () => {
+    setOpen(false);
   };
 
   const StyledMenu = withStyles({
@@ -106,14 +141,14 @@ export default function MinigrowlAppBar(props) {
       keepMounted
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       open={isMenuOpen}
-      onClose={handleMenuClose}
+      onClose={handleOptionsMenuClose}
       TransitionComponent={Fade}
     >
       <StyledMenuItem
         selected={i18n.language === 'it'}
         onClick={() => {
           i18n.changeLanguage('it');
-          handleMenuClose();
+          handleOptionsMenuClose();
         }}
       >
         <ListItemText primary="ITA" /> 🇮🇹
@@ -121,7 +156,7 @@ export default function MinigrowlAppBar(props) {
       <StyledMenuItem
         selected={i18n.language === 'en'}
         onClick={() => {
-          handleMenuClose();
+          handleOptionsMenuClose();
           i18n.changeLanguage('en');
         }}
       >
@@ -130,7 +165,7 @@ export default function MinigrowlAppBar(props) {
       <StyledMenuItem
         selected={i18n.language === 'ru'}
         onClick={() => {
-          handleMenuClose();
+          handleOptionsMenuClose();
           i18n.changeLanguage('ru');
         }}
       >
@@ -138,7 +173,6 @@ export default function MinigrowlAppBar(props) {
       </StyledMenuItem>
       <StyledMenuItem
         onClick={() => {
-          //handleMenuClose();
           props.onToggleWebSocket();
         }}
       >
@@ -152,6 +186,15 @@ export default function MinigrowlAppBar(props) {
           </ToggleOff>
         )}
         <ListItemText primary="Websockets" />
+      </StyledMenuItem>
+      <StyledMenuItem
+        onClick={() => {
+          handleClickOpenChooseBoard();
+        }}
+      >
+        <DeveloperBoard fontSize="small" />
+
+        <ListItemText primary="Select Board" />
       </StyledMenuItem>
     </StyledMenu>
   );
@@ -186,6 +229,42 @@ export default function MinigrowlAppBar(props) {
             <MoreIcon />
           </IconButton>
         </Toolbar>
+        <Dialog
+          fullWidth={true}
+          maxWidth="sm"
+          open={open}
+          onClose={handleCloseBoardChooser}
+          aria-labelledby="Mingrowl-board-chooser"
+        >
+          <DialogTitle id="choose-board-dialog-title">Active board</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              You can choose the active board used in dashboard. Changing board will reset front-end only
+            </DialogContentText>
+            <form className={classes.form} noValidate>
+              <FormControl className={classes.formControl}>
+                <InputLabel htmlFor="max-width">{t('common:activeBoard')}</InputLabel>
+                <Select
+                  autoFocus
+                  value={props.value.activeBoard}
+                  onChange={handleBoardChange}
+                  inputProps={{
+                    name: 'max-width',
+                    id: 'max-width',
+                  }}
+                >
+                  <MenuItem value={1}>Board 1</MenuItem>
+                  <MenuItem value={2}>Board 2</MenuItem>
+                </Select>
+              </FormControl>
+            </form>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseBoardChooser} color="primary">
+              {t('common:close')}
+            </Button>
+          </DialogActions>
+        </Dialog>
       </AppBar>
       {renderMenu}
     </div>

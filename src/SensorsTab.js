@@ -66,10 +66,7 @@ export default function SensorsTab(props) {
                 <TableCell>{t('sensors:' + row.typ)}</TableCell>
                 <TableCell>
                   <Flash spy={row.timeStamp}>
-                    <Typography>
-                      {row.val}
-                      {row.uinit}
-                    </Typography>
+                    <Typography>{row.val ? row.val + row.uinit : 'NA'}</Typography>
                   </Flash>
                 </TableCell>
                 <TableCell>

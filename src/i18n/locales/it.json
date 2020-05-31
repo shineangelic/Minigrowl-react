@@ -11,7 +11,9 @@
     "month": "Mese",
     "day": "Giorno",
     "week": "Settimana",
-    "hour": "Ore"
+    "hour": "Ore",
+    "activeBoard": "Active board",
+    "close": "Chiudi"
   },
   "languages": {
     "ru": "Russo",

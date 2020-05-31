@@ -10,7 +10,9 @@
     "lastseen": "Последнее просмотренное",
     "month": "Месяц",
     "day": "День",
-    "week": "Неделя"
+    "week": "Неделя",
+    "activeBoard": "Active board",
+    "close": "Close"
   },
   "languages": {
     "ru": "Русский",

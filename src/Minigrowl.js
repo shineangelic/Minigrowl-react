@@ -75,13 +75,13 @@ class Minigrowl extends React.Component {
     } else {
       //puo ancora non esserci
       const list = this.state.actuatorsUptime;
-      return list.concat({ _id: act.id, count: 0, timeSpan: timespan });
+      return list.concat({ _id: act.actuatorId, count: 0, timeSpan: timespan });
     }
   };
   onUpdateActuator = (updatedActuator) => {
     //console.log('UPDATE ' + updatedActuator.id);
     const list = this.state.actuators.map((act, j) => {
-      if (act.id === updatedActuator.id) {
+      if (act.actuatorId === updatedActuator.actuatorId) {
         return updatedActuator;
       } else {
         return act;
@@ -134,6 +134,29 @@ class Minigrowl extends React.Component {
       console.log('DEACTIVATING WEBSOCKET');
       this.client.deactivate();
     }
+  }
+  //called from menu
+  handleBoardChange(event) {
+    console.log('ACTIVE BOARD:' + event);
+    this.setState(
+      {
+        activeBoard: event,
+        sensors: [],
+        actuators: [],
+        chartData: [],
+        chartSensor: {}, //selected chart
+        chartHistData: [],
+        chartHistSensor: {},
+        lastESPContact: new Date(),
+        actuatorsUptime: [{}],
+      },
+      () => {
+        console.log('ACTIVE BOARD:' + this.state.activeBoard);
+        this.askSensors();
+        this.askActuators();
+        this.webSock();
+      },
+    );
   }
   //called from menu
   toggleWebSocket() {
@@ -217,7 +240,7 @@ class Minigrowl extends React.Component {
       .then((response) => {
         const uptimeArr = response.data;
         console.log('Received UPTIME: ');
-        console.log(uptimeArr[0]);
+        console.log(uptimeArr);
         const slist = this.onUpdateUptime(uptimeArr[0], actuat, timeSpan);
         console.log('UPTIMES: ');
         console.log(slist);
@@ -299,7 +322,12 @@ class Minigrowl extends React.Component {
       <ThemeProvider theme={theme}>
         <CssBaseline />
 
-        <MinigrowlAppBar value={this.state} onToggleWebSocket={() => this.toggleWebSocket()} />
+        <MinigrowlAppBar
+          t={t}
+          value={this.state}
+          onBoardChange={(bo) => this.handleBoardChange(bo)}
+          onToggleWebSocket={() => this.toggleWebSocket()}
+        />
 
         <div className="App">
           <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
