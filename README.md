@@ -4,7 +4,7 @@ This is the web client for minigrowl, a project to drive a generic **growroom**.
 
 Minigrow APIs are based on three kind of JSON objects: `sensors`, `actuators` and `commands`. While the first two reflect real hardware devices with their own reading/status, the command is an abstraction used to drive such devices. Please see [Microgrowl-spring](https://shineangelic.github.io/Minigrowl-spring/) for general concepts and [Microgrowl-ESP32](https://shineangelic.github.io/Minigrowl-ESP-LoRa32-OLED/) for harware explanation and embedded lifecycle behaviour.
 
-![screenshot](/docs/scrrenDesktop3.png)
+![screenshot](/docs/scrrenDesktop1.png)
 
 Thanks to [@hatemalimam](https://github.com/hatemalimam) for bootstrapping and contributing, I am a react novice, so please take this project as it comes. Enabling web-sockets was really satisfactory, please point out any possible improvement creating an issue.
 
