@@ -126,7 +126,7 @@ export default function MinigrowlActuator(props) {
   const handleExpandClick = () => {
     setExpanded(!expanded);
 
-    if (!expanded) handleChangeUptimeInterval(updateInterval);
+    //if (!expanded) handleChangeUptimeInterval(updateInterval);
   };
 
   const handleChangeUptimeInterval = (option) => {

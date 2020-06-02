@@ -52,17 +52,7 @@ class Minigrowl extends React.Component {
       actuatorsUptime: [{}],
     };
   }
-  onUpdateSensor = (updatedSensor) => {
-    const list = this.state.sensors.map((sensor, j) => {
-      if (sensor.id === updatedSensor.id) {
-        //e` lui!
-        return updatedSensor;
-      } else {
-        return sensor;
-      }
-    });
-    return list;
-  };
+
   onUpdateUptime = (singleUptime, act, timespan) => {
     if (singleUptime) {
       //togli quello pertinente
@@ -78,10 +68,22 @@ class Minigrowl extends React.Component {
       return list.concat({ _id: act.actuatorId, count: 0, timeSpan: timespan });
     }
   };
+  onUpdateSensor = (updatedSensor) => {
+    const list = this.state.sensors.map((sensor, j) => {
+      if (sensor.sensorId === updatedSensor.sensorId) {
+        console.log('SENSORI ASYNC RECV' + updatedSensor);
+        return updatedSensor;
+      } else {
+        return sensor;
+      }
+    });
+    return list;
+  };
   onUpdateActuator = (updatedActuator) => {
     //console.log('UPDATE ' + updatedActuator.id);
     const list = this.state.actuators.map((act, j) => {
       if (act.actuatorId === updatedActuator.actuatorId) {
+        console.log('ACT ASYNC RECV' + updatedActuator);
         return updatedActuator;
       } else {
         return act;
@@ -94,14 +96,12 @@ class Minigrowl extends React.Component {
     this.client = new Client();
 
     this.client.configure({
-      brokerURL: `ws://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/minigrowl-ws/websocket`,
+      brokerURL: `wss://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/minigrowl-ws/websocket`,
       onConnect: () => {
         console.log('WEBSOCKET CONNECTED');
         this.client.subscribe('/topic/sensors', (message) => {
           const sens = message.body;
-          console.log('SENSORI ASYNC RECV' + sens);
           const slist = this.onUpdateSensor(JSON.parse(sens));
-
           ///ieeee aggiorno solo quello ciusto
           this.setState({
             isOnline: true,
@@ -110,7 +110,6 @@ class Minigrowl extends React.Component {
         });
         this.client.subscribe('/topic/actuators', (message) => {
           const sens = message.body;
-          console.log('ACT ASYNC RECV' + sens);
           const alist = this.onUpdateActuator(JSON.parse(sens));
           ///ieeee aggiorno solo quello ciusto
           this.setState({
@@ -137,7 +136,8 @@ class Minigrowl extends React.Component {
   }
   //called from menu
   handleBoardChange(event) {
-    console.log('ACTIVE BOARD:' + event);
+    console.log('ACTIVE BOARD: ' + event);
+    localStorage.setItem('activeBoard', event);
     this.setState(
       {
         activeBoard: event,
@@ -196,7 +196,7 @@ class Minigrowl extends React.Component {
     //sensors = [];
     axios
       .get(
-        `http://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/sensors/${this.state.activeBoard}`,
+        `https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/sensors/${this.state.activeBoard}`,
       )
       .then((response) => {
         const sensors = response.data;
@@ -213,7 +213,7 @@ class Minigrowl extends React.Component {
   askActuators() {
     axios
       .get(
-        `http://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/actuators/${this.state.activeBoard}`,
+        `https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/actuators/${this.state.activeBoard}`,
       )
       .then((response) => {
         const actuators = response.data;
@@ -230,13 +230,16 @@ class Minigrowl extends React.Component {
 
   askActuatorUptime(actuat, dtIn, dtOut, timeSpan) {
     axios
-      .get(`http://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/actuators/uptime/`, {
-        params: {
-          dataInizio: dtIn,
-          dataFine: dtOut,
-          actuatorId: actuat.actuatorId,
+      .get(
+        `https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/actuators/uptime/`,
+        {
+          params: {
+            dataInizio: dtIn,
+            dataFine: dtOut,
+            actuatorId: actuat.actuatorId,
+          },
         },
-      })
+      )
       .then((response) => {
         const uptimeArr = response.data;
         console.log('Received UPTIME: ');
@@ -259,7 +262,7 @@ class Minigrowl extends React.Component {
   askChartData(sensor) {
     axios
       .get(
-        `http://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/sensors/${sensor.sensorId}/hourChart`,
+        `https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/sensors/${sensor.sensorId}/hourChart`,
       )
       .then((response) => {
         const chartDatar = response.data;
@@ -274,7 +277,7 @@ class Minigrowl extends React.Component {
   askChartDataHistory(sensor) {
     axios
       .get(
-        `http://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/sensors/${sensor.sensorId}/historyChart`,
+        `https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/sensors/${sensor.sensorId}/historyChart`,
       )
       .then((response) => {
         const chartDatar = response.data;
@@ -288,9 +291,14 @@ class Minigrowl extends React.Component {
   }
 
   componentDidMount() {
-    this.askSensors();
-    this.askActuators();
-    this.webSock();
+    var activeBoard = localStorage.getItem('activeBoard');
+    console.log('LOADED activeBoard:' + activeBoard);
+    if (activeBoard) this.handleBoardChange(activeBoard);
+    else {
+      this.askSensors();
+      this.askActuators();
+      this.webSock();
+    }
     //this.askLastContact();
   }
   componentWillUnmount() {
@@ -302,7 +310,7 @@ class Minigrowl extends React.Component {
     console.log(command);
     axios
       .put(
-        `http://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/commands/${this.state.activeBoard}/queue/add`,
+        `https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/commands/${this.state.activeBoard}/queue/add`,
         command,
         {
           headers: { 'Content-Type': 'application/json;charset=UTF-8' },
@@ -346,7 +354,7 @@ class Minigrowl extends React.Component {
           <Typography>
             {' '}
             <TimeAgo
-              formatter={i18n.language === 'it' ? itaFormat : engFormat}
+              formatter={i18n.language === 'it' ? itaFormat : i18n.language === 'en' ? engFormat : ruFormat}
               date={this.getLastContact(this.state)}
             />{' '}
           </Typography>

@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import { withStyles } from '@material-ui/core/styles';
 import Menu from '@material-ui/core/Menu';
 import { fade, makeStyles } from '@material-ui/core/styles';
@@ -77,13 +78,29 @@ export default function MinigrowlAppBar(props) {
   const theme = useTheme();
   const classes = useStyles();
   const menuId = 'minigrowl-menu';
+  const [boards, setBoards] = React.useState([]);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [open, setOpen] = React.useState(false);
   const { t } = props;
   const isMenuOpen = Boolean(anchorEl);
 
+  function askBoards() {
+    //sensors = [];
+    axios
+      .get(`https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/boards`)
+      .then((response) => {
+        const boards = response.data;
+        console.log('Received boards: ' + boards);
+        setBoards(boards);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
   const handleOptionsMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
+    askBoards();
   };
 
   const handleOptionsMenuClose = () => {
@@ -236,7 +253,12 @@ export default function MinigrowlAppBar(props) {
           onClose={handleCloseBoardChooser}
           aria-labelledby="Mingrowl-board-chooser"
         >
-          <DialogTitle id="choose-board-dialog-title">Active board</DialogTitle>
+          <DialogTitle id="choose-board-dialog-title">
+            <Typography variant="h5">
+              <DeveloperBoard />
+              Active board
+            </Typography>
+          </DialogTitle>
           <DialogContent>
             <DialogContentText>
               You can choose the active board used in dashboard. Changing board will reset front-end only
@@ -253,14 +275,17 @@ export default function MinigrowlAppBar(props) {
                     id: 'max-width',
                   }}
                 >
-                  <MenuItem value={1}>Board 1</MenuItem>
-                  <MenuItem value={2}>Board 2</MenuItem>
+                  {boards.map((board) => (
+                    <MenuItem key={board.boardId} value={board.boardId}>
+                      Board {board.boardId}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </form>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleCloseBoardChooser} color="primary">
+            <Button variant="contained" onClick={handleCloseBoardChooser} color="primary">
               {t('common:close')}
             </Button>
           </DialogActions>
