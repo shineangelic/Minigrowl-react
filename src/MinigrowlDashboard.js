@@ -102,7 +102,7 @@ export default function MinigrowlDashboard(props) {
       </Grid>
       <Grid container spacing={3}>
         {actuators.map((actuator) => (
-          <Grid key={actuator.id} item xs={12} md={4} lg={3} sm={6}>
+          <Grid key={actuator.actuatorId} item xs={12} md={4} lg={3} sm={6}>
             <Paper>
               <MinigrowlActuator
                 onAskUptime={(act, from, to, timeSpan) => props.onAskUptime(act, from, to, timeSpan)}

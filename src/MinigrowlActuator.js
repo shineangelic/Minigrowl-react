@@ -175,7 +175,7 @@ export default function MinigrowlActuator(props) {
   function getActuatorUptimeDailyAvg(act) {
     var ret = -1;
     actuptime.forEach((element) => {
-      if (element._id == act.id) {
+      if (element._id == act.actuatorId) {
         var sec = element.count / 1000;
         var hour = sec / 60 / 60;
 

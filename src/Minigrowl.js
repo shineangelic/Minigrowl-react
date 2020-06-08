@@ -80,7 +80,6 @@ class Minigrowl extends React.Component {
     return list;
   };
   onUpdateActuator = (updatedActuator) => {
-    //console.log('UPDATE ' + updatedActuator.id);
     const list = this.state.actuators.map((act, j) => {
       if (act.actuatorId === updatedActuator.actuatorId) {
         console.log('ACT ASYNC RECV' + updatedActuator);
@@ -93,7 +92,13 @@ class Minigrowl extends React.Component {
   };
 
   webSock() {
-    this.client = new Client();
+    if (!this.client) this.client = new Client();
+
+    if (!this.state.isWebSocketEnabled) {
+      console.log('CLOSED WEBSOCKET');
+      this.client.deactivate();
+      return;
+    }
 
     this.client.configure({
       brokerURL: `wss://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/minigrowl-ws/websocket`,
@@ -129,9 +134,6 @@ class Minigrowl extends React.Component {
     if (this.state.isWebSocketEnabled) {
       console.log('OPENING WEBSOCKET');
       this.client.activate();
-    } else {
-      console.log('DEACTIVATING WEBSOCKET');
-      this.client.deactivate();
     }
   }
   //called from menu
@@ -281,7 +283,7 @@ class Minigrowl extends React.Component {
       )
       .then((response) => {
         const chartDatar = response.data;
-        console.log('GOT HISTORY DATA');
+        console.log('GOT HISTORY DATA for sensorID: ' + sensor.sensorId);
         this.setState({ chartHistData: chartDatar, chartHistSensor: sensor, isOnline: true });
       })
       .catch(function (error) {
