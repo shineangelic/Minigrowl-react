@@ -72,6 +72,7 @@ class Minigrowl extends React.Component {
     const list = this.state.sensors.map((sensor, j) => {
       if (sensor.sensorId === updatedSensor.sensorId) {
         console.log('SENSORI ASYNC RECV' + updatedSensor);
+        console.log(updatedSensor);
         return updatedSensor;
       } else {
         return sensor;
@@ -82,7 +83,8 @@ class Minigrowl extends React.Component {
   onUpdateActuator = (updatedActuator) => {
     const list = this.state.actuators.map((act, j) => {
       if (act.actuatorId === updatedActuator.actuatorId) {
-        console.log('ACT ASYNC RECV' + updatedActuator);
+        console.log('ACT ASYNC RECV');
+        console.log(updatedActuator);
         return updatedActuator;
       } else {
         return act;

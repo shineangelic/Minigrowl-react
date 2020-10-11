@@ -41,6 +41,7 @@ import ButtonGroup from '@material-ui/core/ButtonGroup';
 
 import Flip from 'react-reveal/Flip';
 import Flash from 'react-reveal/Flash';
+import WeekSchedule from './WeekSchedule';
 /* MyFirst react Class. Don't blast me
 04/2020 coronavirus past-time
 
@@ -90,6 +91,18 @@ export default function MinigrowlActuator(props) {
   const actuptime = props.uptime;
   const [updateInterval, setUpdateInterval] = React.useState('day');
   const [expanded, setExpanded] = React.useState(false);
+
+  const [programOpen, setProgramOpen] = React.useState(false);
+
+  const showModal = () => {
+    console.log('         showModal: ');
+    setProgramOpen(true);
+  };
+
+  const hideModal = () => {
+    console.log('         hideModal: ');
+    setProgramOpen(false);
+  };
 
   //does not work
   const sortedCmds = actuator.cmds.sort((a, b) => a.name > b.name);
@@ -162,7 +175,7 @@ export default function MinigrowlActuator(props) {
   function getActuatorUptime(act, timespan) {
     var ret = -1;
     actuptime.forEach((element) => {
-      if (element._id == act.id && element.timeSpan == timespan) {
+      if (element._id == act.actuatorId) {
         var sec = element.count / 1000;
         var hour = sec / 60 / 60;
         ret = hour;
@@ -250,6 +263,7 @@ export default function MinigrowlActuator(props) {
               {t('devices:mode')}: {actuator.mode == MODE_AUTO ? 'Auto' : 'Manual'}
             </Typography>
             <Typography paragraph>{t('devices:autodesc')}</Typography>
+            <Typography paragraph>{t('devices:created')} {new Date(actuator.timeStampCreated).toLocaleString()}</Typography>
             <Typography color="textSecondary" className={classes.depositContext}></Typography>
 
             <Box display="flex" alignItems="center" justifyContent="center">
@@ -272,6 +286,19 @@ export default function MinigrowlActuator(props) {
                       {comando.val == 0 ? <ToggleOff /> : ''} {t('commands:' + comando.name)}
                     </Button>
                   ))}
+                  <WeekSchedule t={t} show={programOpen} value={props} handleClose={hideModal}></WeekSchedule>
+                  <Button
+                    key="programmato"
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    onClick={() => {
+                      showModal();
+                    }}
+                  >
+                    <TouchApp />
+                    Programmato
+                  </Button>
                 </ButtonGroup>
               </CardActions>
             </Box>

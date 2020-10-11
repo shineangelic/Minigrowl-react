@@ -31,7 +31,8 @@
     "autodesc": "AUTO mode follows scheduling defined at board level, thus disabling manual commands.",
     "litfor": "Lit for",
     "inthelast": "in the last",
-    "daily": "({{uptime}} hours per day)"
+    "daily": "({{uptime}} hours per day)",
+    "created": "Created: "
   },
   "sensors": {
     "sensors": "Sensors",

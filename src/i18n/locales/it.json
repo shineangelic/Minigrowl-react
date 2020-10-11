@@ -31,7 +31,8 @@
     "autodesc": "La modalita` AUTO segue la programmazione definita sulla scheda e disabilita i comandi manuali",
     "litfor": "Acceso per",
     "inthelast": "Nell'ultimo/a",
-    "daily": "(In media {{uptime}} ore ogni giorno)"
+    "daily": "(In media {{uptime}} ore ogni giorno)",
+    "created": "Creato: "
   },
   "sensors": {
     "sensors": "Sensori",

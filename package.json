@@ -7,6 +7,7 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.49",
     "@n1ru4l/react-time-ago": "^1.1.0",
+    "@remotelock/react-week-scheduler": "^3.5.8",
     "@stomp/stompjs": "^5.4.4",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
