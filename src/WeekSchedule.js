@@ -62,6 +62,7 @@ export default function WeekSchedule(props) {
               <Paper>
               <ScheduleSelectorCard>
                 <ScheduleSelector
+                labelColor="white"
                   selection={schedule}
                   minTime={0}
                   maxTime={24}

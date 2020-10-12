@@ -9323,10 +9323,8 @@ react-reveal@^1.2.2:
   dependencies:
     prop-types "^15.5.10"
 
-react-schedule-selector@^2.0.0:
+"react-schedule-selector@file:../react-schedule-selector":
   version "2.0.0"
-  resolved "https://registry.yarnpkg.com/react-schedule-selector/-/react-schedule-selector-2.0.0.tgz#bc7a10bce37db4876265d747774148d9335a7650"
-  integrity sha512-b1blVV995SOf9GHUV3zXZcOLff72uyRgeJZNx6Q2J4VoK0huBFCifiNsM+pocVIdt5pjRYvyP6h/NuWdwjb+IQ==
   dependencies:
     date-fns "^1.29.0"
 

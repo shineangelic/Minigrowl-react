@@ -24,7 +24,7 @@
     "react-i18next": "^11.3.5",
     "react-moment": "^0.9.7",
     "react-reveal": "^1.2.2",
-    "react-schedule-selector": "^2.0.0",
+    "react-schedule-selector": "file:C:\\Users\\Ale\\git\\react-schedule-selector",
     "react-scripts": "3.4.1",
     "react-select": "^3.1.0",
     "react-stomp": "^5.0.0",
