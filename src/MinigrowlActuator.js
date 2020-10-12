@@ -297,7 +297,7 @@ export default function MinigrowlActuator(props) {
                     }}
                   >
                     <TouchApp />
-                    Programmato
+                    Programmazione
                   </Button>
                 </ButtonGroup>
               </CardActions>

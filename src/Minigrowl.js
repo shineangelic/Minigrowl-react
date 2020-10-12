@@ -50,9 +50,10 @@ class Minigrowl extends React.Component {
       chartHistSensor: {}, //selected chart history
       lastESPContact: new Date(),
       actuatorsUptime: [{}],
+      actuatorsSchedule: [{}],
     };
   }
-
+ 
   onUpdateUptime = (singleUptime, act, timespan) => {
     if (singleUptime) {
       //togli quello pertinente
