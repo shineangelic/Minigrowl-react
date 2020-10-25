@@ -51,9 +51,10 @@ class Minigrowl extends React.Component {
       lastESPContact: new Date(),
       actuatorsUptime: [{}],
       actuatorsSchedule: [{}],
+      putScheduleErr: '',
     };
   }
- 
+
   onUpdateUptime = (singleUptime, act, timespan) => {
     if (singleUptime) {
       //togli quello pertinente
@@ -67,6 +68,27 @@ class Minigrowl extends React.Component {
       //puo ancora non esserci
       const list = this.state.actuatorsUptime;
       return list.concat({ _id: act.actuatorId, count: 0, timeSpan: timespan });
+    }
+  };
+  onUpdateSchedule = (scheduleArr, act) => {
+    /* if (scheduleArr && scheduleArr.length > 1) {
+      const slint = scheduleArr;
+      return slint;
+    } else if (scheduleArr && scheduleArr.length > 0) {
+      return [].concat(scheduleArr);
+    }
+    return [];*/
+
+    console.log('RECEIVED SCHEDULE: ' + scheduleArr);
+    if (scheduleArr) {
+      //togli quello pertinente
+      if (scheduleArr.length > 0) {
+        const list = this.state.actuatorsSchedule.filter((item, j) => scheduleArr[0].actuatorId !== item.actuatorId);
+        //singleUptime.timeSpan = timespan;
+        const catted = list.concat(scheduleArr); //rimettilo
+        return catted;
+      }
+      return [];
     }
   };
   onUpdateSensor = (updatedSensor) => {
@@ -154,6 +176,7 @@ class Minigrowl extends React.Component {
         chartHistSensor: {},
         lastESPContact: new Date(),
         actuatorsUptime: [{}],
+        actuatorsSchedule: [{}],
       },
       () => {
         console.log('ACTIVE BOARD:' + this.state.activeBoard);
@@ -201,7 +224,7 @@ class Minigrowl extends React.Component {
     //sensors = [];
     axios
       .get(
-        `https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/sensors/${this.state.activeBoard}`,
+        `http://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/sensors/${this.state.activeBoard}`,
       )
       .then((response) => {
         const sensors = response.data;
@@ -218,7 +241,7 @@ class Minigrowl extends React.Component {
   askActuators() {
     axios
       .get(
-        `https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/actuators/${this.state.activeBoard}`,
+        `http://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/actuators/${this.state.activeBoard}`,
       )
       .then((response) => {
         const actuators = response.data;
@@ -235,16 +258,13 @@ class Minigrowl extends React.Component {
 
   askActuatorUptime(actuat, dtIn, dtOut, timeSpan) {
     axios
-      .get(
-        `https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/actuators/uptime/`,
-        {
-          params: {
-            dataInizio: dtIn,
-            dataFine: dtOut,
-            actuatorId: actuat.actuatorId,
-          },
+      .get(`http://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/actuators/uptime/`, {
+        params: {
+          dataInizio: dtIn,
+          dataFine: dtOut,
+          actuatorId: actuat.actuatorId,
         },
-      )
+      })
       .then((response) => {
         const uptimeArr = response.data;
         console.log('Received UPTIME: ');
@@ -256,7 +276,6 @@ class Minigrowl extends React.Component {
           isOnline: true,
           actuatorsUptime: slist,
         });
-        // this.setState({ actuatorsUptime: uptimeArr });
       })
       .catch(function (error) {
         //this.setState({ isOnline: false });
@@ -264,10 +283,91 @@ class Minigrowl extends React.Component {
       });
   }
 
+  askActuatorSchedule(actuator) {
+    axios
+      .get(
+        `http://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/actuators/${actuator.bid.boardId}/${actuator.actuatorId}/schedule`,
+      )
+      .then((response) => {
+        const actSchedule = response.data;
+        //console.log('GOT SCHEDULE DATA for actuatorId: ' + actuator.actuatorId);
+        const slist = this.onUpdateSchedule(actSchedule, actuator);
+        console.log('SCHEDULE: ');
+        console.log(slist);
+        this.setState({
+          isOnline: true,
+          actuatorsSchedule: slist,
+          putScheduleErr: '',
+        });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
+  putActuatorSchedule(actuator, dtFrom, dtTo, cmd) {
+    console.log('putActuatorSchedule for ' + actuator.id);
+    console.log('Schedule command:');
+    console.log(cmd);
+    const aid = actuator.actuatorId;
+    var self = this;
+    axios
+      .put(
+        `http://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/actuators/${actuator.bid.boardId}/${actuator.actuatorId}/schedule`,
+        { aid, dtFrom, dtTo, cmd },
+        {
+          headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        },
+      )
+      .then((response) => {
+        const actSchedule = response.data;
+        console.log('PUT SCHEDULE SUCCESS ' + actSchedule);
+
+        this.askActuatorSchedule(actuator);
+      })
+      .catch(function (error) {
+        console.log(error);
+        console.log(error.response.data.message);
+        //console.log(error.response.status);
+        //console.log(error.response.headers);
+        self.setState({
+          putScheduleErr: error.response.data.message,
+        });
+        return error.response.data;
+        //this.setState({ isOnline: false });
+      });
+  }
+
+  deleteActuatorSchedule(act, sched) {
+    console.log('deleteActuatorSchedule command:');
+    console.log(sched);
+    const aid = sched.actuatorScheduleId;
+    axios
+      .delete(
+        `http://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/actuators/${act.bid.boardId}/${act.actuatorId}/schedule/${aid}`,
+        {
+          headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+          headers: { 'Content-Type': 'application/json' },
+          data: {},
+        },
+      )
+      .then((response) => {
+        const actSchedule = response.data;
+        console.log('DELETE SCHEDULE SUCCESS ' + actSchedule);
+
+        this.askActuatorSchedule(act);
+      })
+      .catch(function (error) {
+        console.log(error);
+        console.log(error.message);
+        //this.setState({ isOnline: false });
+      });
+  }
+
   askChartData(sensor) {
     axios
       .get(
-        `https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/sensors/${sensor.sensorId}/hourChart`,
+        `http://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/sensors/${sensor.sensorId}/hourChart`,
       )
       .then((response) => {
         const chartDatar = response.data;
@@ -282,7 +382,7 @@ class Minigrowl extends React.Component {
   askChartDataHistory(sensor) {
     axios
       .get(
-        `https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/sensors/${sensor.sensorId}/historyChart`,
+        `http://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/sensors/${sensor.sensorId}/historyChart`,
       )
       .then((response) => {
         const chartDatar = response.data;
@@ -315,7 +415,7 @@ class Minigrowl extends React.Component {
     console.log(command);
     axios
       .put(
-        `https://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/commands/${this.state.activeBoard}/queue/add`,
+        `http://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/api/minigrowl/v2/commands/${this.state.activeBoard}/queue/add`,
         command,
         {
           headers: { 'Content-Type': 'application/json;charset=UTF-8' },
@@ -368,6 +468,9 @@ class Minigrowl extends React.Component {
             value={this.state}
             onAskChartData={(aboutWhichSensor) => this.askChartData(aboutWhichSensor)}
             onAskLastContact={(sensors) => this.getLastSensorsContact(sensors)}
+            onAskActuatorSchedule={(actuator) => this.askActuatorSchedule(actuator)}
+            onPutActuatorSchedule={(actuator, dtIn, dtTo, cmd) => this.putActuatorSchedule(actuator, dtIn, dtTo, cmd)}
+            onDeleteActuatorSchedule={(act, sched) => this.deleteActuatorSchedule(act, sched)}
             onAskUptime={(actuator, from, to, timeSpan) => this.askActuatorUptime(actuator, from, to, timeSpan)}
             onAskHistoryData={(aboutWhichSensor) => this.askChartDataHistory(aboutWhichSensor)}
             onCommand={(whichCommand) => this.sendCommand(whichCommand)}

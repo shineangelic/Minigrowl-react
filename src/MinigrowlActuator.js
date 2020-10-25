@@ -96,6 +96,7 @@ export default function MinigrowlActuator(props) {
 
   const showModal = () => {
     console.log('         showModal: ');
+    props.onAskActuatorSchedule(actuator);
     setProgramOpen(true);
   };
 
@@ -263,7 +264,9 @@ export default function MinigrowlActuator(props) {
               {t('devices:mode')}: {actuator.mode == MODE_AUTO ? 'Auto' : 'Manual'}
             </Typography>
             <Typography paragraph>{t('devices:autodesc')}</Typography>
-            <Typography paragraph>{t('devices:created')} {new Date(actuator.timeStampCreated).toLocaleString()}</Typography>
+            <Typography paragraph>
+              {t('devices:created')} {new Date(actuator.timeStampCreated).toLocaleString()}
+            </Typography>
             <Typography color="textSecondary" className={classes.depositContext}></Typography>
 
             <Box display="flex" alignItems="center" justifyContent="center">
@@ -286,7 +289,15 @@ export default function MinigrowlActuator(props) {
                       {comando.val == 0 ? <ToggleOff /> : ''} {t('commands:' + comando.name)}
                     </Button>
                   ))}
-                  <WeekSchedule t={t} show={programOpen} value={props} handleClose={hideModal}></WeekSchedule>
+                  <WeekSchedule
+                    t={t}
+                    show={programOpen}
+                    value={props}
+                    handleClose={hideModal}
+                    onDeleteSchedule={(act, sched) => props.onDeleteActuatorSchedule(act, sched)}
+                    onAddSchedule={(act, dtIn, dtTo, cmd) => props.onPutActuatorSchedule(act, dtIn, dtTo, cmd)}
+                  ></WeekSchedule>
+
                   <Button
                     key="programmato"
                     variant="contained"

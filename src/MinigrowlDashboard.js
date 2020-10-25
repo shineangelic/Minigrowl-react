@@ -81,6 +81,11 @@ export default function MinigrowlDashboard(props) {
     props.onCommand(comman);
   }
 
+  function selectSchedule(actuator, scheduleArray) {
+    const list = scheduleArray.filter((item, j) => actuator.actuatorId !== item.actuatorId);
+    return list;
+  }
+
   const { t } = props;
   return (
     <Container maxWidth="lg" className={classes.container}>
@@ -105,10 +110,15 @@ export default function MinigrowlDashboard(props) {
           <Grid key={actuator.actuatorId} item xs={12} md={4} lg={3} sm={6}>
             <Paper>
               <MinigrowlActuator
+                onAskActuatorSchedule={(act) => props.onAskActuatorSchedule(act)}
+                onPutActuatorSchedule={(act, dtIn, dtTo, cmd) => props.onPutActuatorSchedule(act, dtIn, dtTo, cmd)}
+                onDeleteActuatorSchedule={(act, sched) => props.onDeleteActuatorSchedule(act, sched)}
                 onAskUptime={(act, from, to, timeSpan) => props.onAskUptime(act, from, to, timeSpan)}
                 t={t}
                 uptime={props.value.actuatorsUptime}
+                errori={props.value.putScheduleErr}
                 value={actuator}
+                actuatorSchedule={selectSchedule(actuator, props.value.actuatorsSchedule)}
                 onClick={(comando) => handleActuatorClick(comando, actuator)}
               />
             </Paper>
